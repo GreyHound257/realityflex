@@ -6,7 +6,7 @@ import { Check, ChevronRight, X } from 'lucide-react'
 import { initials, statusLabels, type Lead, type LeadStatus } from '@/lib/data'
 
 export function Brand({ light = false }: { light?: boolean }) {
-  return <div className={`brand ${light ? 'brand-light' : ''}`}><span className="brand-mark"><svg width="31" height="33" viewBox="0 0 31 33" fill="none" aria-hidden="true"><path d="M3 27V14L15.5 4L28 14V27" stroke="currentColor" strokeWidth="2.6" strokeLinejoin="round"/><path d="M9 27V16L15.5 11L22 16V27M3 27H28M14 27V20H18V27" stroke="currentColor" strokeWidth="2.3" strokeLinejoin="round"/><path d="M24 9V4H28V12" stroke="currentColor" strokeWidth="2.3" strokeLinejoin="round"/></svg></span><span>De Reality<span className="brand-second">Spec<span className="brand-period">.</span></span></span></div>
+  return <div className={`brand ${light ? 'brand-light' : ''}`}><span className="brand-mark"><img src="/images/logo.png" alt="De Reality Spec Logo" width={31} height={33} /></span><span>De Reality<span className="brand-second">Spec<span className="brand-period">.</span></span></span></div>
 }
 
 export function Avatar({ lead, size = 'normal' }: { lead: Pick<Lead, 'name' | 'color'>; size?: 'small' | 'normal' | 'large' }) {

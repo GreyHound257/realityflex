@@ -27,14 +27,22 @@ function readStored<T>(key: string, fallback: T): T {
 }
 
 export function AppProvider({ children }: { children: ReactNode }) {
-  const [leads, setLeads] = useState<Lead[]>(() => readStored('drs-leads-v1', makeSeedLeads()))
-  const [activities, setActivities] = useState<Activity[]>(() => readStored('drs-activity-v1', seedActivities))
-  const [adminName, setAdminName] = useState(() => readStored('drs-admin-name', 'Alex Morgan'))
+  const [isClient, setIsClient] = useState(false)
+  const [leads, setLeads] = useState<Lead[]>(makeSeedLeads)
+  const [activities, setActivities] = useState<Activity[]>(seedActivities)
+  const [adminName, setAdminName] = useState('Alex Morgan')
   const [toast, setToast] = useState('')
 
-  useEffect(() => { localStorage.setItem('drs-leads-v1', JSON.stringify(leads)) }, [leads])
-  useEffect(() => { localStorage.setItem('drs-activity-v1', JSON.stringify(activities)) }, [activities])
-  useEffect(() => { localStorage.setItem('drs-admin-name', JSON.stringify(adminName)) }, [adminName])
+  useEffect(() => {
+    setIsClient(true)
+    setLeads(readStored('drs-leads-v1', makeSeedLeads()))
+    setActivities(readStored('drs-activity-v1', seedActivities))
+    setAdminName(readStored('drs-admin-name', 'Alex Morgan'))
+  }, [])
+
+  useEffect(() => { if (isClient) localStorage.setItem('drs-leads-v1', JSON.stringify(leads)) }, [leads, isClient])
+  useEffect(() => { if (isClient) localStorage.setItem('drs-activity-v1', JSON.stringify(activities)) }, [activities, isClient])
+  useEffect(() => { if (isClient) localStorage.setItem('drs-admin-name', JSON.stringify(adminName)) }, [adminName, isClient])
   useEffect(() => {
     if (!toast) return
     const timer = window.setTimeout(() => setToast(''), 4500)

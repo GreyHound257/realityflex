@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, type FormEvent } from 'react'
+import { useState, useEffect, type FormEvent } from 'react'
 import { Bell, Check, ExternalLink, LockKeyhole, Mail, Settings2, ShieldCheck, UserRound } from 'lucide-react'
 import Link from 'next/link'
 import { Avatar, Toggle } from '@/components/Ui'
@@ -9,24 +9,16 @@ import { useApp } from '@/lib/store'
 export default function Settings() {
   const { adminName, setAdminName, notify } = useApp()
   const [name, setName] = useState(adminName)
-  const [email, setEmail] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('drs-admin-email') || 'alex@derealityspec.com'
-    }
-    return 'alex@derealityspec.com'
-  })
-  const [notifications, setNotifications] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('drs-notifications') !== 'false'
-    }
-    return true
-  })
-  const [digest, setDigest] = useState(() => {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem('drs-digest') !== 'false'
-    }
-    return true
-  })
+  const [email, setEmail] = useState('alex@derealityspec.com')
+  const [notifications, setNotifications] = useState(true)
+  const [digest, setDigest] = useState(true)
+
+  useEffect(() => {
+    setName(adminName)
+    setEmail(localStorage.getItem('drs-admin-email') || 'alex@derealityspec.com')
+    setNotifications(localStorage.getItem('drs-notifications') !== 'false')
+    setDigest(localStorage.getItem('drs-digest') !== 'false')
+  }, [adminName])
   
   function save(event: FormEvent) {
     event.preventDefault()

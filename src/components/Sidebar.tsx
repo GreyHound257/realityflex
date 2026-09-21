@@ -26,7 +26,7 @@ export default function Sidebar({ open, onClose, onHelp }: { open: boolean; onCl
     {open && <div className="sidebar-scrim" onClick={onClose} />}
     <aside className={`sidebar ${open ? 'sidebar-open' : ''}`}>
       <div className="sidebar-brand"><Brand /><button className="icon-button mobile-close" aria-label="Close menu" onClick={onClose}><X size={20} /></button></div>
-      <button className="workspace-switch" onClick={() => { router.push('/admin/settings'); onClose() }}><span className="workspace-icon">D<span>R</span></span><span><strong>Referral workspace</strong><small>Admin portal</small></span><ChevronDown size={15} /></button>
+      <button className="workspace-switch" onClick={() => { router.push('/admin/settings'); onClose() }}><span className="workspace-icon" style={{ paddingRight: 0 }}><img src="/images/logo.png" alt="Workspace icon" width={18} height={18} /></span><span><strong>Referral workspace</strong><small>Admin portal</small></span><ChevronDown size={15} /></button>
       <div className="nav-group-label">WORKSPACE</div>
       <nav className="main-nav" aria-label="Main navigation">
         {items.map(({ path, tab, label, icon: Icon, count, dot }) => {
