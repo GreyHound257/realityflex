@@ -22,18 +22,39 @@ function RegistrationContent() {
   const [emailConfirmed, setEmailConfirmed] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [baseUrl, setBaseUrl] = useState('')
-  const referrer = leads.find(lead => lead.code === referralCode.trim())
+  const [referrer, setReferrer] = useState<{name: string, code: string} | null>(null)
+
+  useEffect(() => {
+    const code = referralCode.trim()
+    if (code.length >= 4) {
+      import('@/actions').then(m => m.lookupReferralCode(code).then(res => setReferrer(res)))
+    } else {
+      setReferrer(null)
+    }
+  }, [referralCode])
 
   useEffect(() => {
     setBaseUrl(window.location.origin)
   }, [])
 
-  function continueDetails(event: FormEvent) {
+  async function continueDetails(event: FormEvent) {
     event.preventDefault()
-    if (leads.some(lead => lead.email.toLowerCase() === email.trim().toLowerCase())) { setError('This email is already registered. Please use a different email address.'); return }
-    if (name.trim().length < 2) { setError('Please enter your full name.'); return }
+    setSubmitting(true)
+    const { checkEmailExists } = await import('@/actions')
+    const exists = await checkEmailExists(email)
+    if (exists) { 
+      setError('This email is already registered. Please use a different email address.')
+      setSubmitting(false)
+      return 
+    }
+    if (name.trim().length < 2) { 
+      setError('Please enter your full name.')
+      setSubmitting(false)
+      return 
+    }
     setError('')
     setStep(2)
+    setSubmitting(false)
   }
 
   function submit(event: FormEvent) {
@@ -43,11 +64,11 @@ function RegistrationContent() {
     finishRegistration(referralCode.trim())
   }
 
-  function finishRegistration(code: string | null) {
+  async function finishRegistration(code: string | null) {
     if (submitting) return
     setSubmitting(true)
     setWarning(false)
-    const lead = register(name, email, code)
+    const lead = await register(name, email, code)
     setRegistered(lead)
     setStep(3)
     setError('')

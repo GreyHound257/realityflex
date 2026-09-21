@@ -1,0 +1,35 @@
+// use prisma-8
+
+model Lead {
+  id         String   @id @default(uuid())
+  name       String
+  email      String   @unique
+  code       String   @unique
+  referredBy String?
+  status     String   @default("registered")
+  color      String
+  date       TimestamptzString @default(now())
+}
+
+model Activity {
+  id     String   @id @default(uuid())
+  type   String
+  name   String
+  detail String
+  time   TimestamptzString @default(now())
+}
+
+model Admin {
+  id       String    @id @default(uuid())
+  email    String    @unique
+  name     String
+  password String    
+  sessions Session[]
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  adminId   String
+  admin     Admin    @relation(fields: [adminId], references: [id])
+  expiresAt TimestamptzString
+}

@@ -1,15 +1,17 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, type ReactNode } from 'react'
+import { createContext, useContext, useEffect, useState, useTransition, type ReactNode } from 'react'
 import { Check, X } from 'lucide-react'
-import { avatarColors, makeSeedLeads, seedActivities, type Activity, type Lead } from './data'
+import { type Activity, type Lead } from './data'
+import { registerLead, verifyLead } from '@/actions'
+import { useRouter } from 'next/navigation'
 
 interface AppState {
   leads: Lead[]
   activities: Activity[]
   notify: (message: string) => void
   setVerified: (id: string, verified: boolean) => void
-  register: (name: string, email: string, referredBy: string | null) => Lead
+  register: (name: string, email: string, referredBy: string | null) => Promise<Lead>
   copy: (text: string, message?: string) => Promise<void>
   exportLeads: (items: Lead[]) => void
   adminName: string
@@ -26,22 +28,18 @@ function readStored<T>(key: string, fallback: T): T {
   } catch { return fallback }
 }
 
-export function AppProvider({ children }: { children: ReactNode }) {
+export function AppProvider({ children, serverLeads, serverActivities }: { children: ReactNode, serverLeads: Lead[], serverActivities: Activity[] }) {
   const [isClient, setIsClient] = useState(false)
-  const [leads, setLeads] = useState<Lead[]>(makeSeedLeads)
-  const [activities, setActivities] = useState<Activity[]>(seedActivities)
   const [adminName, setAdminName] = useState('Alex Morgan')
   const [toast, setToast] = useState('')
+  const [isPending, startTransition] = useTransition()
+  const router = useRouter()
 
   useEffect(() => {
     setIsClient(true)
-    setLeads(readStored('drs-leads-v1', makeSeedLeads()))
-    setActivities(readStored('drs-activity-v1', seedActivities))
     setAdminName(readStored('drs-admin-name', 'Alex Morgan'))
   }, [])
 
-  useEffect(() => { if (isClient) localStorage.setItem('drs-leads-v1', JSON.stringify(leads)) }, [leads, isClient])
-  useEffect(() => { if (isClient) localStorage.setItem('drs-activity-v1', JSON.stringify(activities)) }, [activities, isClient])
   useEffect(() => { if (isClient) localStorage.setItem('drs-admin-name', JSON.stringify(adminName)) }, [adminName, isClient])
   useEffect(() => {
     if (!toast) return
@@ -50,26 +48,15 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }, [toast])
 
   function setVerified(id: string, verified: boolean) {
-    const lead = leads.find(item => item.id === id)
-    if (!lead) return
-    setLeads(current => current.map(item => item.id === id ? { ...item, status: verified ? 'verified' : 'pending' } : item))
-    const activity: Activity = { id: crypto.randomUUID(), type: verified ? 'verification' : 'update', name: lead.name, detail: verified ? 'Payment has been verified' : 'Payment verification was removed', time: 'Just now' }
-    setActivities(current => [activity, ...current].slice(0, 30))
-    setToast(verified ? `${lead.name} marked as payment verified` : `Payment verification removed for ${lead.name}`)
+    startTransition(async () => {
+      await verifyLead(id, verified)
+      setToast(verified ? `Payment verified` : `Payment verification removed`)
+    })
   }
 
-  function register(name: string, email: string, referredBy: string | null) {
-    const alphabet = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
-    let code = ''
-    do {
-      const random = crypto.getRandomValues(new Uint8Array(4))
-      code = 'RF3-' + Array.from(random).map(n => alphabet[n % alphabet.length]).join('')
-    } while (leads.some(lead => lead.code === code))
-    const lead: Lead = { id: crypto.randomUUID(), name: name.trim(), email: email.trim().toLowerCase(), referredBy, code, date: new Date().toISOString(), status: 'registered', color: avatarColors[leads.length % avatarColors.length] }
-    setLeads(current => [lead, ...current])
-    const activity: Activity = { id: crypto.randomUUID(), type: 'registration', name: lead.name, detail: referredBy ? 'Registered with a referral code' : 'Joined the referral program', time: 'Just now' }
-    setActivities(current => [activity, ...current].slice(0, 30))
-    return lead
+  async function register(name: string, email: string, referredBy: string | null) {
+    const lead = await registerLead(name, email, referredBy)
+    return lead as unknown as Lead
   }
 
   async function copy(text: string, message = 'Copied to clipboard') {
@@ -104,7 +91,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AppContext.Provider value={{ leads, activities, notify: setToast, setVerified, register, copy, exportLeads, adminName, setAdminName }}>
+    <AppContext.Provider value={{ leads: serverLeads, activities: serverActivities, notify: setToast, setVerified, register, copy, exportLeads, adminName, setAdminName }}>
       {children}
       {toast && <div className="toast" role="status"><span className="toast-check"><Check size={16} /></span>{toast}<button aria-label="Dismiss notification" onClick={() => setToast('')}><X size={16} /></button></div>}
     </AppContext.Provider>
