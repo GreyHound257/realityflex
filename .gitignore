@@ -45,3 +45,5 @@ dist/
 
 .cursor
 .devin
+.agents
+.claude

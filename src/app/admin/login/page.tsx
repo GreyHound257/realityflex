@@ -2,7 +2,8 @@
 import { useState, useEffect, FormEvent } from 'react'
 import { Brand } from '@/components/Ui'
 import { login, setupAdmin, checkNeedsSetup } from '@/actions/auth'
-import { ArrowRight, LockKeyhole, ShieldCheck } from 'lucide-react'
+import { ArrowRight, ArrowLeft, LockKeyhole, ShieldCheck } from 'lucide-react'
+import Link from 'next/link'
 
 export default function LoginPage() {
   const [needsSetup, setNeedsSetup] = useState(false)
@@ -45,9 +46,35 @@ export default function LoginPage() {
   return (
     <div className="registration-page">
       <header className="registration-header">
-        <Brand />
+        <Link href="/" aria-label="De Reality Spec home">
+          <Brand />
+        </Link>
+        <div>
+          <Link href="/" className="admin-link">
+            <ArrowLeft size={14} />
+            Back to registration
+          </Link>
+        </div>
       </header>
-      <main className="registration-main" style={{ justifyContent: 'center' }}>
+      <main className="registration-main">
+        <section className="registration-story">
+          <img src="/images/registration.jpg" alt="Architectural visual" style={{ filter: 'brightness(0.6)' }} />
+          <div className="story-overlay" style={{ background: 'linear-gradient(to top, rgba(14, 79, 171, 0.9), transparent)' }} />
+          <span className="story-top-label"><span />RESTRICTED ACCESS</span>
+          <div className="story-content">
+            <div className="story-star"><ShieldCheck size={28} strokeWidth={1.3} /></div>
+            <h1>Secure.<br />Managed.<br /><em>Workspace.</em></h1>
+            <p>De Reality Spec administrative portal. Authorized personnel only.</p>
+            <div className="story-divider" />
+            <div className="community-proof">
+              <div>
+                <strong>Operational Control.</strong>
+                <span>Manage connections and verify records.</span>
+              </div>
+            </div>
+          </div>
+          <span className="story-bottom-label">SYSTEM AND NETWORK ADMINISTRATION.</span>
+        </section>
         <section className="registration-form-section">
           <div className="registration-form-wrap">
             <div className="registration-stepper">
@@ -69,36 +96,42 @@ export default function LoginPage() {
               {needsSetup && (
                 <div className="form-field">
                   <label htmlFor="name">Full Name</label>
-                  <input
-                    id="name"
-                    autoComplete="name"
-                    value={name}
-                    onChange={e => setName(e.target.value)}
-                    required
-                  />
+                  <div className="form-input-wrap">
+                    <input
+                      id="name"
+                      autoComplete="name"
+                      value={name}
+                      onChange={e => setName(e.target.value)}
+                      required
+                    />
+                  </div>
                 </div>
               )}
               <div className="form-field">
                 <label htmlFor="email">Email Address</label>
-                <input
-                  id="email"
-                  type="email"
-                  autoComplete="email"
-                  value={email}
-                  onChange={e => setEmail(e.target.value)}
-                  required
-                />
+                <div className="form-input-wrap">
+                  <input
+                    id="email"
+                    type="email"
+                    autoComplete="email"
+                    value={email}
+                    onChange={e => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
               </div>
               <div className="form-field">
                 <label htmlFor="password">Password</label>
-                <input
-                  id="password"
-                  type="password"
-                  autoComplete="current-password"
-                  value={password}
-                  onChange={e => setPassword(e.target.value)}
-                  required
-                />
+                <div className="form-input-wrap">
+                  <input
+                    id="password"
+                    type="password"
+                    autoComplete="current-password"
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                    required
+                  />
+                </div>
               </div>
               
               {error && <p className="form-error" style={{ color: 'var(--red)' }}>{error}</p>}

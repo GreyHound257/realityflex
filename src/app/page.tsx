@@ -40,6 +40,26 @@ function RegistrationContent() {
   async function continueDetails(event: FormEvent) {
     event.preventDefault()
     setSubmitting(true)
+
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
+    if (!emailRegex.test(email.trim())) {
+      setError('Please enter a valid email address (e.g., name@example.com).')
+      setSubmitting(false)
+      return
+    }
+
+    const domain = email.split('@')[1]?.toLowerCase()
+    const typoDomains: Record<string, string> = {
+      'gmaia.com': 'gmail.com', 'gmai.com': 'gmail.com', 'gamil.com': 'gmail.com', 'gmal.com': 'gmail.com',
+      'yaho.com': 'yahoo.com', 'yahooo.com': 'yahoo.com', 'yaho.co.uk': 'yahoo.co.uk',
+      'hotmai.com': 'hotmail.com', 'hotmal.com': 'hotmail.com', 'outloo.com': 'outlook.com'
+    }
+    if (domain && typoDomains[domain]) {
+      setError(`Did you mean @${typoDomains[domain]}? Please check your email.`)
+      setSubmitting(false)
+      return
+    }
+
     const { checkEmailExists } = await import('@/actions')
     const exists = await checkEmailExists(email)
     if (exists) { 
