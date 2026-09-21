@@ -26,19 +26,30 @@ export default function LoginPage() {
     setSubmitting(true)
     setError('')
     
-    if (needsSetup) {
-      if (name.trim().length < 2) {
-        setError('Name is required.')
-        setSubmitting(false)
-        return
-      }
-      const res = await setupAdmin(name, email, password)
-      if (res?.error) setError(res.error)
-    } else {
-      const res = await login(email, password)
-      if (res?.error) setError(res.error)
+    if (needsSetup && name.trim().length < 2) {
+      setError('Name is required.')
+      setSubmitting(false)
+      return
     }
-    setSubmitting(false)
+
+    try {
+      const formData = new FormData()
+      formData.append('email', email)
+      formData.append('password', password)
+      
+      if (needsSetup) {
+        formData.append('name', name)
+        const res = await setupAdmin(formData)
+        if (res?.error) setError(res.error)
+      } else {
+        const res = await login(formData)
+        if (res?.error) setError(res.error)
+      }
+    } catch (err) {
+      setError('An unexpected error occurred.')
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   if (loading) return null

@@ -3,6 +3,10 @@
 import { db } from "@/prisma/db";
 import { revalidatePath } from "next/cache";
 import { avatarColors } from "@/lib/data";
+import { Resend } from "resend";
+import WelcomeEmail from "@/components/emails/WelcomeEmail";
+
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function checkEmailExists(email: string) {
   const existing = await db.orm.public.Lead.where({ email: email.trim().toLowerCase() }).first();
@@ -38,6 +42,19 @@ export async function registerLead(name: string, email: string, referredBy: stri
     status: "registered",
     color,
   });
+
+  const confirmLink = `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/confirm?code=${code}`
+  
+  try {
+    await resend.emails.send({
+      from: 'De Reality Spec <onboarding@resend.dev>', // Replace with verified domain when ready
+      to: [lead.email],
+      subject: 'Welcome to De Reality Spec',
+      react: WelcomeEmail({ name: lead.name, code: lead.code, confirmLink }),
+    });
+  } catch (err) {
+    console.error("Failed to send welcome email:", err);
+  }
   
   revalidatePath("/admin/dashboard");
   return lead;

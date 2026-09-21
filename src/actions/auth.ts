@@ -10,7 +10,11 @@ export async function checkNeedsSetup() {
   return count.total === 0
 }
 
-export async function setupAdmin(name: string, email: string, password: string) {
+export async function setupAdmin(formData: FormData) {
+  const name = formData.get('name') as string
+  const email = formData.get('email') as string
+  const password = formData.get('password') as string
+
   const isSetup = await checkNeedsSetup()
   if (!isSetup) {
     return { error: "Admin already exists." }
@@ -27,7 +31,10 @@ export async function setupAdmin(name: string, email: string, password: string) 
   redirect('/admin/dashboard')
 }
 
-export async function login(email: string, password: string) {
+export async function login(formData: FormData) {
+  const email = formData.get('email') as string
+  const password = formData.get('password') as string
+
   const admin = await db.orm.public.Admin.where({ email: email.trim().toLowerCase() }).first()
   if (!admin) {
     return { error: "Invalid email or password." }

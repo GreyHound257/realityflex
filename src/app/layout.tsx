@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import './globals.scss'
+import './globals.css'
 import { AppProvider } from '@/lib/store'
 
 export const metadata: Metadata = {
