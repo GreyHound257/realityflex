@@ -32,7 +32,7 @@ function RegistrationContent() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [referralCode, setReferralCode] = useState(
-    searchParams.get("ref")?.toUpperCase() || "",
+    searchParams.get("ref-code")?.toUpperCase() || "",
   );
   const [error, setError] = useState("");
   const [warning, setWarning] = useState(false);
@@ -553,7 +553,7 @@ function RegistrationContent() {
             </button>
             <button
               className="button button-white full-width"
-              onClick={() => finishRegistration(null)}
+              onClick={() => finishRegistration("RF3-ORG1")}
             >
               Proceed Without Code
               <ArrowRight size={15} />

@@ -24,12 +24,13 @@ export async function registerLead(name: string, email: string, referredBy: stri
   let code = "";
   
   // Need to ensure unique code
-  let unique = false;
-  while (!unique) {
+  while (true) {
     const random = crypto.getRandomValues(new Uint8Array(4));
     code = "RF3-" + Array.from(random).map(n => alphabet[n % alphabet.length]).join("");
     const existing = await db.orm.public.Lead.where({ code }).first();
-    if (!existing) unique = true;
+    if (!existing) {
+      break;
+    }
   }
 
   const color = avatarColors[Math.floor(Math.random() * avatarColors.length)];
