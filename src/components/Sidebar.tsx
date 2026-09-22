@@ -7,17 +7,17 @@ import { useApp } from '@/lib/store'
 import { Avatar, Brand } from './Ui'
 
 export default function Sidebar({ open, onClose, onHelp }: { open: boolean; onClose: () => void; onHelp: () => void }) {
-  const { leads, adminName } = useApp()
+  const { buyers, referrers, adminName } = useApp()
   const router = useRouter()
   const pathname = usePathname()
   const searchParams = useSearchParams()
   const currentTab = searchParams.get('tab') || 'overview'
-  const pending = leads.filter(lead => lead.status === 'pending').length
+  const pending = buyers.filter(buyer => buyer.status === 'pending').length
   
   const items = [
     { path: '/admin/dashboard', tab: 'overview', label: 'Overview', icon: LayoutDashboard },
-    { path: '/admin/dashboard?tab=leads', tab: 'leads', label: 'All leads', icon: UsersRound, count: leads.length },
-    { path: '/admin/dashboard?tab=referrals', tab: 'referrals', label: 'Referral network', icon: GitFork },
+    { path: '/admin/dashboard?tab=leads', tab: 'leads', label: 'All buyers', icon: UsersRound, count: buyers.length },
+    { path: '/admin/dashboard?tab=referrers', tab: 'referrers', label: 'All referrers', icon: GitFork, count: referrers.length },
     { path: '/admin/dashboard?tab=verification', tab: 'verification', label: 'Payment verification', icon: ShieldCheck, dot: pending > 0 },
     { path: '/admin/dashboard?tab=reports', tab: 'reports', label: 'Reports & insights', icon: ChartNoAxesCombined },
   ]

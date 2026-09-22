@@ -2,18 +2,21 @@
 
 import { createContext, useContext, useEffect, useState, useTransition, type ReactNode } from 'react'
 import { Check, X } from 'lucide-react'
-import { type Activity, type Lead } from './data'
-import { registerLead, verifyLead } from '@/actions'
+import { type Activity, type Buyer, type Referrer } from './data'
+import { createReferrer, registerBuyer, verifyBuyer } from '@/actions'
 import { useRouter } from 'next/navigation'
 
 interface AppState {
-  leads: Lead[]
+  buyers: Buyer[]
+  referrers: Referrer[]
   activities: Activity[]
   notify: (message: string) => void
   setVerified: (id: string, verified: boolean) => void
-  register: (name: string, email: string, referredBy: string | null) => Promise<Lead>
+  createRef: (name: string, email: string, phone: string) => Promise<Referrer>
+  register: (name: string, email: string, phone: string, referredBy: string | null) => Promise<Buyer>
   copy: (text: string, message?: string) => Promise<void>
-  exportLeads: (items: Lead[]) => void
+  exportBuyers: (items: Buyer[]) => void
+  exportReferrers: (items: Referrer[]) => void
   adminName: string
   setAdminName: (name: string) => void
 }
@@ -28,7 +31,7 @@ function readStored<T>(key: string, fallback: T): T {
   } catch { return fallback }
 }
 
-export function AppProvider({ children, serverLeads, serverActivities }: { children: ReactNode, serverLeads: Lead[], serverActivities: Activity[] }) {
+export function AppProvider({ children, serverBuyers, serverReferrers, serverActivities }: { children: ReactNode, serverBuyers: Buyer[], serverReferrers: Referrer[], serverActivities: Activity[] }) {
   const [isClient, setIsClient] = useState(false)
   const [adminName, setAdminName] = useState('Alex Morgan')
   const [toast, setToast] = useState('')
@@ -49,14 +52,19 @@ export function AppProvider({ children, serverLeads, serverActivities }: { child
 
   function setVerified(id: string, verified: boolean) {
     startTransition(async () => {
-      await verifyLead(id, verified)
+      await verifyBuyer(id, verified)
       setToast(verified ? `Payment verified` : `Payment verification removed`)
     })
   }
 
-  async function register(name: string, email: string, referredBy: string | null) {
-    const lead = await registerLead(name, email, referredBy)
-    return lead as unknown as Lead
+  async function createRef(name: string, email: string, phone: string) {
+    const referrer = await createReferrer(name, email, phone)
+    return referrer as unknown as Referrer
+  }
+
+  async function register(name: string, email: string, phone: string, referredBy: string | null) {
+    const buyer = await registerBuyer(name, email, phone, referredBy)
+    return buyer as unknown as Buyer
   }
 
   async function copy(text: string, message = 'Copied to clipboard') {
@@ -74,24 +82,40 @@ export function AppProvider({ children, serverLeads, serverActivities }: { child
     } catch { setToast('Unable to access your clipboard. Please select and copy the text.') }
   }
 
-  function exportLeads(items: Lead[]) {
+  function exportBuyers(items: Buyer[]) {
     const quote = (value: string) => `"${value.replaceAll('"', '""')}"`
     const rows = [
-      ['User Name', 'Email', 'Referral Code Used', 'Own Referral Code', 'Date Registered', 'Status'],
-      ...items.map(lead => [lead.name, lead.email, lead.referredBy ?? '', lead.code, lead.date, lead.status]),
+      ['User Name', 'Email', 'Phone', 'Referral Code Used', 'Date Registered', 'Status'],
+      ...items.map(buyer => [buyer.name, buyer.email, buyer.phone, buyer.referredBy ?? '', buyer.date, buyer.status]),
     ]
     const blob = new Blob(['\uFEFF' + rows.map(row => row.map(quote).join(',')).join('\r\n')], { type: 'text/csv;charset=utf-8;' })
     const url = URL.createObjectURL(blob)
     const anchor = document.createElement('a')
     anchor.href = url
-    anchor.download = `de-reality-spec-leads-${new Date().toISOString().slice(0, 10)}.csv`
+    anchor.download = `de-reality-spec-buyers-${new Date().toISOString().slice(0, 10)}.csv`
     anchor.click()
     URL.revokeObjectURL(url)
-    setToast(`${items.length} leads exported successfully`)
+    setToast(`${items.length} buyers exported successfully`)
+  }
+
+  function exportReferrers(items: Referrer[]) {
+    const quote = (value: string) => `"${value.replaceAll('"', '""')}"`
+    const rows = [
+      ['Name', 'Email', 'Phone', 'Code'],
+      ...items.map(referrer => [referrer.name, referrer.email, referrer.phone, referrer.code]),
+    ]
+    const blob = new Blob(['\uFEFF' + rows.map(row => row.map(quote).join(',')).join('\r\n')], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const anchor = document.createElement('a')
+    anchor.href = url
+    anchor.download = `de-reality-spec-referrers-${new Date().toISOString().slice(0, 10)}.csv`
+    anchor.click()
+    URL.revokeObjectURL(url)
+    setToast(`${items.length} referrers exported successfully`)
   }
 
   return (
-    <AppContext.Provider value={{ leads: serverLeads, activities: serverActivities, notify: setToast, setVerified, register, copy, exportLeads, adminName, setAdminName }}>
+    <AppContext.Provider value={{ buyers: serverBuyers, referrers: serverReferrers, activities: serverActivities, notify: setToast, setVerified, createRef, register, copy, exportBuyers, exportReferrers, adminName, setAdminName }}>
       {children}
       {toast && <div className="toast" role="status"><span className="toast-check"><Check size={16} /></span>{toast}<button aria-label="Dismiss notification" onClick={() => setToast('')}><X size={16} /></button></div>}
     </AppContext.Provider>

@@ -5,11 +5,11 @@ import { useApp } from '@/lib/store'
 import { type Lead } from '@/lib/data'
 import { Avatar } from './Ui'
 
-export function TopReferrers({ onSelect, onViewAll, expanded = false }: { onSelect: (lead: Lead) => void; onViewAll?: () => void; expanded?: boolean }) {
-  const { leads } = useApp()
-  const ranked = leads.map(lead => ({ lead, verified: leads.filter(child => child.referredBy === lead.code && child.status === 'verified').length, total: leads.filter(child => child.referredBy === lead.code).length })).filter(item => item.total > 0).sort((a, b) => b.verified - a.verified).slice(0, expanded ? 12 : 3)
+export function TopReferrers({ onSelect, onViewAll, expanded = false }: { onSelect: (buyer: any) => void; onViewAll?: () => void; expanded?: boolean }) {
+  const { referrers, buyers } = useApp()
+  const ranked = referrers.map(referrer => ({ referrer, verified: buyers.filter(child => child.referredBy === referrer.code && child.status === 'verified').length, total: buyers.filter(child => child.referredBy === referrer.code).length })).filter(item => item.total > 0).sort((a, b) => b.verified - a.verified).slice(0, expanded ? 12 : 3)
   const max = ranked[0]?.verified || 1
-  return <section className="insight-card top-referrers"><div className="insight-heading"><h2><Trophy size={17} />Top referrers</h2>{onViewAll && <button className="text-button" onClick={onViewAll}>View network<ArrowUpRight size={14} /></button>}</div><p className="insight-subtitle">The people moving your community forward.</p><div className="ranked-list">{ranked.map(({ lead, verified, total }, index) => <button key={lead.id} className="ranked-item" onClick={() => onSelect(lead)}><span className={`rank-number rank-${index + 1}`}>{String(index + 1).padStart(2, '0')}</span><Avatar lead={lead} size="small" /><span className="ranked-name"><strong>{lead.name}</strong><span>{total} total referrals</span></span><span className="ranked-progress"><span style={{ width: `${verified / max * 100}%` }} /></span><span className="ranked-score"><strong>{verified}</strong><span>verified</span></span><ChevronRight size={15} /></button>)}</div>{expanded && <div className="network-explainer"><GitFork size={18} /><span>Click any referrer to see their complete network and verify individual payments.</span></div>}</section>
+  return <section className="insight-card top-referrers"><div className="insight-heading"><h2><Trophy size={17} />Top referrers</h2>{onViewAll && <button className="text-button" onClick={onViewAll}>View network<ArrowUpRight size={14} /></button>}</div><p className="insight-subtitle">The people moving your community forward.</p><div className="ranked-list">{ranked.map(({ referrer, verified, total }, index) => <button key={referrer.id} className="ranked-item" onClick={() => {}}><span className={`rank-number rank-${index + 1}`}>{String(index + 1).padStart(2, '0')}</span><Avatar lead={{name: referrer.name, color: 'blue'} as any} size="small" /><span className="ranked-name"><strong>{referrer.name}</strong><span>{total} total referrals</span></span><span className="ranked-progress"><span style={{ width: `${verified / max * 100}%` }} /></span><span className="ranked-score"><strong>{verified}</strong><span>verified</span></span><ChevronRight size={15} /></button>)}</div>{expanded && <div className="network-explainer"><GitFork size={18} /><span>Referrers with the most verified referrals.</span></div>}</section>
 }
 
 export function RecentActivity({ onViewAll, expanded = false }: { onViewAll?: () => void; expanded?: boolean }) {
@@ -22,10 +22,10 @@ export function NetworkBanner({ onInvite }: { onInvite: () => void }) {
 }
 
 export function ReferralChart() {
-  const { leads } = useApp()
+  const { buyers } = useApp()
   const groups = [1, 4, 7, 10, 13, 16, 19].map(start => {
-    const group = leads.filter(lead => { const day = new Date(lead.date).getDate(); return day >= start && day < start + 3 })
-    return { label: `Sep ${String(start).padStart(2, '0')}`, total: group.length, verified: group.filter(lead => lead.status === 'verified' && lead.referredBy).length }
+    const group = buyers.filter(buyer => { const day = new Date(buyer.date).getDate(); return day >= start && day < start + 3 })
+    return { label: `Sep ${String(start).padStart(2, '0')}`, total: group.length, verified: group.filter(buyer => buyer.status === 'verified' && buyer.referredBy).length }
   })
   const max = Math.max(...groups.map(group => group.total), 1)
   return <section className="insight-card chart-card"><div className="insight-heading"><h2>Referrals over time</h2><span className="count-pill">September 2026</span></div><p className="insight-subtitle">Registration and verified-referral activity at a glance.</p><div className="chart-legend"><span><i />Registered leads</span><span><i />Verified referrals</span></div><div className="bar-chart">{groups.map(group => <div className="chart-group" key={group.label}><div className="chart-bars"><div className="chart-bar chart-bar-total" style={{ height: `${Math.max(group.total / max * 100, 2)}%` }} title={`${group.total} registrations`}><span>{group.total}</span></div><div className="chart-bar chart-bar-verified" style={{ height: `${Math.max(group.verified / max * 100, 2)}%` }} title={`${group.verified} verified referrals`}><span>{group.verified}</span></div></div><span className="chart-label">{group.label}</span></div>)}</div><div className="chart-footer"><BadgeCheck size={15} />Only payment-verified referrals contribute to the referral score.</div></section>

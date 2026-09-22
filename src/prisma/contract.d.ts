@@ -34,9 +34,9 @@ import type {
 } from '@prisma/orm-postgres/contract/types';
 
 export type StorageHash =
-  StorageHashBase<'9f05f4e2dddea9a76ee94b75f25b6dc8bab6ee85d3373d6f7fcbfd9f6df44483'>;
+  StorageHashBase<'5bd576b875953eb57491ea9fcfc20fc19a2687d111777a21d8fb66c07f570bf4'>;
 export type ExecutionHash =
-  ExecutionHashBase<'c6c8c202986279e6ee5479822bf153bb0f0b418279895d0c1c50dea596dc230a'>;
+  ExecutionHashBase<'ebfbd183cb8989d7bf459dbdf719177494ddfc2ac9bcfcd5d66aabba8a092bee'>;
 export type ProfileHash =
   ProfileHashBase<'3916f444a8a17ad749191acf9e08dad97d1a327b88c2f1d45d12f240296aa8b2'>;
 
@@ -255,15 +255,22 @@ export type FieldOutputTypes = {
       readonly name: CodecTypes['pg/text@1']['output'];
       readonly password: CodecTypes['pg/text@1']['output'];
     };
-    readonly Lead: {
+    readonly Buyer: {
       readonly id: CodecTypes['pg/text@1']['output'];
       readonly name: CodecTypes['pg/text@1']['output'];
       readonly email: CodecTypes['pg/text@1']['output'];
-      readonly code: CodecTypes['pg/text@1']['output'];
+      readonly phone: CodecTypes['pg/text@1']['output'];
       readonly referredBy: CodecTypes['pg/text@1']['output'] | null;
       readonly status: CodecTypes['pg/text@1']['output'];
       readonly color: CodecTypes['pg/text@1']['output'];
       readonly date: CodecTypes['pg/timestamptz-string@1']['output'];
+    };
+    readonly Referrer: {
+      readonly id: CodecTypes['pg/text@1']['output'];
+      readonly name: CodecTypes['pg/text@1']['output'];
+      readonly email: CodecTypes['pg/text@1']['output'];
+      readonly phone: CodecTypes['pg/text@1']['output'];
+      readonly code: CodecTypes['pg/text@1']['output'];
     };
     readonly Session: {
       readonly id: CodecTypes['pg/text@1']['output'];
@@ -287,15 +294,22 @@ export type FieldInputTypes = {
       readonly name: CodecTypes['pg/text@1']['input'];
       readonly password: CodecTypes['pg/text@1']['input'];
     };
-    readonly Lead: {
+    readonly Buyer: {
       readonly id: CodecTypes['pg/text@1']['input'];
       readonly name: CodecTypes['pg/text@1']['input'];
       readonly email: CodecTypes['pg/text@1']['input'];
-      readonly code: CodecTypes['pg/text@1']['input'];
+      readonly phone: CodecTypes['pg/text@1']['input'];
       readonly referredBy: CodecTypes['pg/text@1']['input'] | null;
       readonly status: CodecTypes['pg/text@1']['input'];
       readonly color: CodecTypes['pg/text@1']['input'];
       readonly date: CodecTypes['pg/timestamptz-string@1']['input'];
+    };
+    readonly Referrer: {
+      readonly id: CodecTypes['pg/text@1']['input'];
+      readonly name: CodecTypes['pg/text@1']['input'];
+      readonly email: CodecTypes['pg/text@1']['input'];
+      readonly phone: CodecTypes['pg/text@1']['input'];
+      readonly code: CodecTypes['pg/text@1']['input'];
     };
     readonly Session: {
       readonly id: CodecTypes['pg/text@1']['input'];
@@ -319,15 +333,22 @@ export type StorageColumnTypes = {
       readonly name: CodecTypes['pg/text@1']['output'];
       readonly password: CodecTypes['pg/text@1']['output'];
     };
-    readonly lead: {
-      readonly code: CodecTypes['pg/text@1']['output'];
+    readonly buyer: {
       readonly color: CodecTypes['pg/text@1']['output'];
       readonly date: CodecTypes['pg/timestamptz-string@1']['output'];
       readonly email: CodecTypes['pg/text@1']['output'];
       readonly id: CodecTypes['pg/text@1']['output'];
       readonly name: CodecTypes['pg/text@1']['output'];
+      readonly phone: CodecTypes['pg/text@1']['output'];
       readonly referredBy: CodecTypes['pg/text@1']['output'] | null;
       readonly status: CodecTypes['pg/text@1']['output'];
+    };
+    readonly referrer: {
+      readonly code: CodecTypes['pg/text@1']['output'];
+      readonly email: CodecTypes['pg/text@1']['output'];
+      readonly id: CodecTypes['pg/text@1']['output'];
+      readonly name: CodecTypes['pg/text@1']['output'];
+      readonly phone: CodecTypes['pg/text@1']['output'];
     };
     readonly session: {
       readonly adminId: CodecTypes['pg/text@1']['output'];
@@ -351,15 +372,22 @@ export type StorageColumnInputTypes = {
       readonly name: CodecTypes['pg/text@1']['input'];
       readonly password: CodecTypes['pg/text@1']['input'];
     };
-    readonly lead: {
-      readonly code: CodecTypes['pg/text@1']['input'];
+    readonly buyer: {
       readonly color: CodecTypes['pg/text@1']['input'];
       readonly date: CodecTypes['pg/timestamptz-string@1']['input'];
       readonly email: CodecTypes['pg/text@1']['input'];
       readonly id: CodecTypes['pg/text@1']['input'];
       readonly name: CodecTypes['pg/text@1']['input'];
+      readonly phone: CodecTypes['pg/text@1']['input'];
       readonly referredBy: CodecTypes['pg/text@1']['input'] | null;
       readonly status: CodecTypes['pg/text@1']['input'];
+    };
+    readonly referrer: {
+      readonly code: CodecTypes['pg/text@1']['input'];
+      readonly email: CodecTypes['pg/text@1']['input'];
+      readonly id: CodecTypes['pg/text@1']['input'];
+      readonly name: CodecTypes['pg/text@1']['input'];
+      readonly phone: CodecTypes['pg/text@1']['input'];
     };
     readonly session: {
       readonly adminId: CodecTypes['pg/text@1']['input'];
@@ -370,11 +398,19 @@ export type StorageColumnInputTypes = {
 };
 
 export namespace Models {
-  export type public_Lead = {
+  export type public_Referrer = {
     id: CodecTypes['pg/text@1']['output'];
     name: CodecTypes['pg/text@1']['output'];
     email: CodecTypes['pg/text@1']['output'];
+    phone: CodecTypes['pg/text@1']['output'];
     code: CodecTypes['pg/text@1']['output'];
+    readonly [RelationKeys]?: never;
+  };
+  export type public_Buyer = {
+    id: CodecTypes['pg/text@1']['output'];
+    name: CodecTypes['pg/text@1']['output'];
+    email: CodecTypes['pg/text@1']['output'];
+    phone: CodecTypes['pg/text@1']['output'];
     referredBy: CodecTypes['pg/text@1']['output'] | null;
     status: CodecTypes['pg/text@1']['output'];
     color: CodecTypes['pg/text@1']['output'];
@@ -408,7 +444,8 @@ export namespace Models {
 
 export declare const models: {
   public: {
-    Lead: Models.public_Lead;
+    Referrer: Models.public_Referrer;
+    Buyer: Models.public_Buyer;
     Activity: Models.public_Activity;
     Admin: Models.public_Admin;
     Session: Models.public_Session;
@@ -495,7 +532,7 @@ type ContractBase = Omit<
               indexes: readonly [];
               foreignKeys: readonly [];
             };
-            readonly lead: {
+            readonly buyer: {
               columns: {
                 readonly id: {
                   readonly nativeType: 'text';
@@ -512,7 +549,7 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
                 };
-                readonly code: {
+                readonly phone: {
                   readonly nativeType: 'text';
                   readonly codecId: 'pg/text@1';
                   readonly nullable: false;
@@ -541,6 +578,39 @@ type ContractBase = Omit<
                   readonly codecId: 'pg/timestamptz-string@1';
                   readonly nullable: false;
                   readonly default: { readonly kind: 'function'; readonly expression: 'now()' };
+                };
+              };
+              primaryKey: { readonly columns: readonly ['id'] };
+              uniques: readonly [{ readonly columns: readonly ['email'] }];
+              indexes: readonly [];
+              foreignKeys: readonly [];
+            };
+            readonly referrer: {
+              columns: {
+                readonly id: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly name: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly email: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly phone: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
+                };
+                readonly code: {
+                  readonly nativeType: 'text';
+                  readonly codecId: 'pg/text@1';
+                  readonly nullable: false;
                 };
               };
               primaryKey: { readonly columns: readonly ['id'] };
@@ -605,7 +675,8 @@ type ContractBase = Omit<
   readonly target: 'postgres';
   readonly targetFamily: 'sql';
   readonly roots: {
-    readonly lead: { readonly namespace: 'public' & NamespaceId; readonly model: 'Lead' };
+    readonly referrer: { readonly namespace: 'public' & NamespaceId; readonly model: 'Referrer' };
+    readonly buyer: { readonly namespace: 'public' & NamespaceId; readonly model: 'Buyer' };
     readonly activity: { readonly namespace: 'public' & NamespaceId; readonly model: 'Activity' };
     readonly admin: { readonly namespace: 'public' & NamespaceId; readonly model: 'Admin' };
     readonly session: { readonly namespace: 'public' & NamespaceId; readonly model: 'Session' };
@@ -696,7 +767,7 @@ type ContractBase = Omit<
               };
             };
           };
-          readonly Lead: {
+          readonly Buyer: {
             readonly fields: {
               readonly id: {
                 readonly nullable: false;
@@ -710,7 +781,7 @@ type ContractBase = Omit<
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
-              readonly code: {
+              readonly phone: {
                 readonly nullable: false;
                 readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
               };
@@ -736,17 +807,53 @@ type ContractBase = Omit<
             };
             readonly relations: Record<string, never>;
             readonly storage: {
-              readonly table: 'lead';
+              readonly table: 'buyer';
               readonly namespaceId: 'public';
               readonly fields: {
                 readonly id: { readonly column: 'id' };
                 readonly name: { readonly column: 'name' };
                 readonly email: { readonly column: 'email' };
-                readonly code: { readonly column: 'code' };
+                readonly phone: { readonly column: 'phone' };
                 readonly referredBy: { readonly column: 'referredBy' };
                 readonly status: { readonly column: 'status' };
                 readonly color: { readonly column: 'color' };
                 readonly date: { readonly column: 'date' };
+              };
+            };
+          };
+          readonly Referrer: {
+            readonly fields: {
+              readonly id: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly name: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly email: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly phone: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+              readonly code: {
+                readonly nullable: false;
+                readonly type: { readonly kind: 'scalar'; readonly codecId: 'pg/text@1' };
+              };
+            };
+            readonly relations: Record<string, never>;
+            readonly storage: {
+              readonly table: 'referrer';
+              readonly namespaceId: 'public';
+              readonly fields: {
+                readonly id: { readonly column: 'id' };
+                readonly name: { readonly column: 'name' };
+                readonly email: { readonly column: 'email' };
+                readonly phone: { readonly column: 'phone' };
+                readonly code: { readonly column: 'code' };
               };
             };
           };
@@ -838,7 +945,15 @@ type ContractBase = Omit<
         {
           readonly ref: {
             readonly namespace: 'public';
-            readonly table: 'lead';
+            readonly table: 'buyer';
+            readonly column: 'id';
+          };
+          readonly onCreate: { readonly kind: 'generator'; readonly id: 'uuidv4' };
+        },
+        {
+          readonly ref: {
+            readonly namespace: 'public';
+            readonly table: 'referrer';
             readonly column: 'id';
           };
           readonly onCreate: { readonly kind: 'generator'; readonly id: 'uuidv4' };

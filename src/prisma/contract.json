@@ -12,8 +12,12 @@
       "model": "Admin",
       "namespace": "public"
     },
-    "lead": {
-      "model": "Lead",
+    "buyer": {
+      "model": "Buyer",
+      "namespace": "public"
+    },
+    "referrer": {
+      "model": "Referrer",
       "namespace": "public"
     },
     "session": {
@@ -153,15 +157,8 @@
               "table": "admin"
             }
           },
-          "Lead": {
+          "Buyer": {
             "fields": {
-              "code": {
-                "nullable": false,
-                "type": {
-                  "codecId": "pg/text@1",
-                  "kind": "scalar"
-                }
-              },
               "color": {
                 "nullable": false,
                 "type": {
@@ -197,6 +194,13 @@
                   "kind": "scalar"
                 }
               },
+              "phone": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "referredBy": {
                 "nullable": true,
                 "type": {
@@ -215,9 +219,6 @@
             "relations": {},
             "storage": {
               "fields": {
-                "code": {
-                  "column": "code"
-                },
                 "color": {
                   "column": "color"
                 },
@@ -233,6 +234,9 @@
                 "name": {
                   "column": "name"
                 },
+                "phone": {
+                  "column": "phone"
+                },
                 "referredBy": {
                   "column": "referredBy"
                 },
@@ -241,7 +245,68 @@
                 }
               },
               "namespaceId": "public",
-              "table": "lead"
+              "table": "buyer"
+            }
+          },
+          "Referrer": {
+            "fields": {
+              "code": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "email": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "id": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "name": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "phone": {
+                "nullable": false,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              }
+            },
+            "relations": {},
+            "storage": {
+              "fields": {
+                "code": {
+                  "column": "code"
+                },
+                "email": {
+                  "column": "email"
+                },
+                "id": {
+                  "column": "id"
+                },
+                "name": {
+                  "column": "name"
+                },
+                "phone": {
+                  "column": "phone"
+                }
+              },
+              "namespaceId": "public",
+              "table": "referrer"
             }
           },
           "Session": {
@@ -390,13 +455,8 @@
                 }
               ]
             },
-            "lead": {
+            "buyer": {
               "columns": {
-                "code": {
-                  "codecId": "pg/text@1",
-                  "nativeType": "text",
-                  "nullable": false
-                },
                 "color": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
@@ -426,6 +486,11 @@
                   "nativeType": "text",
                   "nullable": false
                 },
+                "phone": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
                 "referredBy": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
@@ -437,6 +502,49 @@
                     "kind": "literal",
                     "value": "registered"
                   },
+                  "nativeType": "text",
+                  "nullable": false
+                }
+              },
+              "foreignKeys": [],
+              "indexes": [],
+              "primaryKey": {
+                "columns": [
+                  "id"
+                ]
+              },
+              "uniques": [
+                {
+                  "columns": [
+                    "email"
+                  ]
+                }
+              ]
+            },
+            "referrer": {
+              "columns": {
+                "code": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "email": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "id": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "name": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": false
+                },
+                "phone": {
+                  "codecId": "pg/text@1",
                   "nativeType": "text",
                   "nullable": false
                 }
@@ -520,10 +628,10 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "9f05f4e2dddea9a76ee94b75f25b6dc8bab6ee85d3373d6f7fcbfd9f6df44483"
+    "storageHash": "5bd576b875953eb57491ea9fcfc20fc19a2687d111777a21d8fb66c07f570bf4"
   },
   "execution": {
-    "executionHash": "c6c8c202986279e6ee5479822bf153bb0f0b418279895d0c1c50dea596dc230a",
+    "executionHash": "ebfbd183cb8989d7bf459dbdf719177494ddfc2ac9bcfcd5d66aabba8a092bee",
     "mutations": {
       "defaults": [
         {
@@ -556,7 +664,18 @@
           "ref": {
             "column": "id",
             "namespace": "public",
-            "table": "lead"
+            "table": "buyer"
+          }
+        },
+        {
+          "onCreate": {
+            "id": "uuidv4",
+            "kind": "generator"
+          },
+          "ref": {
+            "column": "id",
+            "namespace": "public",
+            "table": "referrer"
           }
         },
         {
