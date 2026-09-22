@@ -41,7 +41,7 @@ function DashboardContent() {
   const [registrationUrl, setRegistrationUrl] = useState('')
 
   useEffect(() => {
-    setRegistrationUrl(`${window.location.origin}/`)
+    setRegistrationUrl(`${window.location.origin}/?ref=RF3-ORG1`)
   }, [])
 
   useEffect(() => {

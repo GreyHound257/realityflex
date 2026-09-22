@@ -12,6 +12,7 @@ import {
   Copy,
   HeartHandshake,
   Info,
+  Italic,
   Link2,
   LockKeyhole,
   Mail,
@@ -248,7 +249,7 @@ function RegistrationContent() {
                   <br />A world of possibilities.
                 </h2>
                 <p className="registration-intro">
-                  Join De Reality Spec for thoughtfully selected real estate
+                  Join De Reality Spec Ltd. for thoughtfully selected real estate
                   opportunities. Let’s start with you.
                 </p>
                 <form onSubmit={continueDetails} className="registration-form">
@@ -474,7 +475,7 @@ function RegistrationContent() {
                       <strong>Check your inbox</strong>
                       <span>
                         Look for your confirmation email at{" "}
-                        <b>{registered.email}</b>.
+                        <b>{registered.email}. </b><i>Check your spam if you don't see it in your inbox</i>.
                       </span>
                     </p>
                   </div>
@@ -521,7 +522,7 @@ function RegistrationContent() {
           </div>
           <div className="registration-form-footer">
             <span>REAL ESTATE. REAL CONNECTIONS.</span>
-            <span>De Reality Spec © 2026</span>
+            <span>De Reality Spec Ltd. © 2026</span>
           </div>
         </section>
       </main>

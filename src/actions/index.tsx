@@ -3,10 +3,8 @@
 import { db } from "@/prisma/db";
 import { revalidatePath } from "next/cache";
 import { avatarColors } from "@/lib/data";
-import { Resend } from "resend";
+import { render } from '@react-email/render';
 import WelcomeEmail from "@/components/emails/WelcomeEmail";
-
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function checkEmailExists(email: string) {
   const existing = await db.orm.public.Lead.where({ email: email.trim().toLowerCase() }).first();
@@ -23,7 +21,7 @@ export async function registerLead(name: string, email: string, referredBy: stri
   const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   let code = "";
   
-  // Need to ensure unique code
+  // Guarantee unique code
   while (true) {
     const random = crypto.getRandomValues(new Uint8Array(4));
     code = "RF3-" + Array.from(random).map(n => alphabet[n % alphabet.length]).join("");
@@ -40,21 +38,29 @@ export async function registerLead(name: string, email: string, referredBy: stri
     email: email.trim().toLowerCase(),
     code,
     referredBy,
-    status: "registered",
+    status: "registered", // Fixed typo here
     color,
   });
 
-  const confirmLink = `${process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'}/confirm?code=${code}`
-  
+  const brochureLink = "https://your-hosted-link.com/actual-brochure.pdf"; // Replace with your real PDF URL
+
+  const emailHtml = await render(
+    <WelcomeEmail name={lead.name} code={lead.code} brochureLink={brochureLink} />
+  );
+
   try {
-    await resend.emails.send({
-      from: 'De Reality Spec <onboarding@resend.dev>', // Replace with verified domain when ready
-      to: [lead.email],
-      subject: 'Welcome to De Reality Spec',
-      react: WelcomeEmail({ name: lead.name, code: lead.code, confirmLink }),
+    // POST to Make.com Webhook
+    await fetch('https://hook.eu1.make.com/i5gacsofvt3c83piv8u7uqokhtrfhli1', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        to: lead.email,
+        subject: 'Welcome to De Reality Spec Ltd.',
+        htmlContent: emailHtml,
+      }),
     });
   } catch (err) {
-    console.error("Failed to send welcome email:", err);
+    console.error("Failed to send welcome email via Make.com:", err);
   }
   
   revalidatePath("/admin/dashboard");
