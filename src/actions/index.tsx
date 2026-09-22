@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { avatarColors } from "@/lib/data";
 import { render } from '@react-email/render';
 import WelcomeEmail from "@/components/emails/WelcomeEmail";
+import bcrypt from "bcryptjs"
 
 export async function checkEmailExists(email: string) {
   const existing = await db.orm.public.Buyer.where({ email: email.trim().toLowerCase() }).first();
@@ -94,4 +95,30 @@ export async function verifyBuyer(id: string, verified: boolean) {
   });
 
   revalidatePath("/admin/dashboard");
+}
+
+export async function updateAdminSettings(adminId: string, formData: FormData) {
+  if (!adminId) return;
+  
+  const name = formData.get("name") as string;
+  const email = formData.get("email") as string;
+  const newPassword = formData.get("newPassword") as string;
+
+  const updateData: { name?: string; email?: string; password?: string } = {};
+  if (name) updateData.name = name;
+  if (email) updateData.email = email;
+
+  if (newPassword && newPassword.trim().length > 0) {
+    updateData.password = await bcrypt.hash(newPassword, 10);
+  }
+
+  await db.orm.public.Admin.where({ id: adminId }).update(updateData);
+
+  await db.orm.public.Activity.create({
+    type: "update",
+    name: name || "Admin",
+    detail: "Admin profile settings were updated",
+  });
+
+  revalidatePath("/admin/settings");
 }

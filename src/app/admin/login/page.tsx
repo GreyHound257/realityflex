@@ -75,7 +75,7 @@ export default function LoginPage() {
           <div className="story-content">
             <div className="story-star"><ShieldCheck size={28} strokeWidth={1.3} /></div>
             <h1>Secure.<br />Managed.<br /><em>Workspace.</em></h1>
-            <p>De Reality Spec administrative portal. Authorized personnel only.</p>
+            <p>De Reality Spec Ltd. administrative portal. Authorized personnel only.</p>
             <div className="story-divider" />
             <div className="community-proof">
               <div>
