@@ -7,17 +7,17 @@ import { render } from '@react-email/render';
 import WelcomeEmail from "@/components/emails/WelcomeEmail";
 
 export async function checkEmailExists(email: string) {
-  const existing = await db.orm.public.Lead.where({ email: email.trim().toLowerCase() }).first();
+  const existing = await db.orm.public.Buyer.where({ email: email.trim().toLowerCase() }).first();
   return !!existing;
 }
 
 export async function lookupReferralCode(code: string) {
   if (!code) return null;
-  const lead = await db.orm.public.Lead.where({ code: code.trim().toUpperCase() }).first();
-  return lead ? { name: lead.name, code: lead.code } : null;
+  const referrer = await db.orm.public.Referrer.where({ code: code.trim().toUpperCase() }).first();
+  return referrer ? { name: referrer.name, code: referrer.code } : null;
 }
 
-export async function registerLead(name: string, email: string, referredBy: string | null) {
+export async function createReferrer(name: string, email: string, phone: string) {
   const alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
   let code = "";
   
@@ -25,27 +25,39 @@ export async function registerLead(name: string, email: string, referredBy: stri
   while (true) {
     const random = crypto.getRandomValues(new Uint8Array(4));
     code = "RF3-" + Array.from(random).map(n => alphabet[n % alphabet.length]).join("");
-    const existing = await db.orm.public.Lead.where({ code }).first();
+    const existing = await db.orm.public.Referrer.where({ code }).first();
     if (!existing) {
       break;
     }
   }
 
-  const color = avatarColors[Math.floor(Math.random() * avatarColors.length)];
-
-  const lead = await db.orm.public.Lead.create({
+  const referrer = await db.orm.public.Referrer.create({
     name: name.trim(),
     email: email.trim().toLowerCase(),
+    phone: phone.trim(),
     code,
+  });
+
+  revalidatePath("/admin/dashboard");
+  return referrer;
+}
+
+export async function registerBuyer(name: string, email: string, phone: string, referredBy: string | null) {
+  const color = avatarColors[Math.floor(Math.random() * avatarColors.length)];
+
+  const buyer = await db.orm.public.Buyer.create({
+    name: name.trim(),
+    email: email.trim().toLowerCase(),
+    phone: phone.trim(),
     referredBy,
-    status: "registered", // Fixed typo here
+    status: "registered",
     color,
   });
 
   const brochureLink = "https://your-hosted-link.com/actual-brochure.pdf"; // Replace with your real PDF URL
 
   const emailHtml = await render(
-    <WelcomeEmail name={lead.name} code={lead.code} brochureLink={brochureLink} />
+    <WelcomeEmail name={buyer.name} brochureLink={brochureLink} />
   );
 
   try {
@@ -54,7 +66,7 @@ export async function registerLead(name: string, email: string, referredBy: stri
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-        to: lead.email,
+        to: buyer.email,
         subject: 'Welcome to De Reality Spec Ltd.',
         htmlContent: emailHtml,
       }),
@@ -64,20 +76,20 @@ export async function registerLead(name: string, email: string, referredBy: stri
   }
   
   revalidatePath("/admin/dashboard");
-  return lead;
+  return buyer;
 }
 
-export async function verifyLead(id: string, verified: boolean) {
-  const updated = await db.orm.public.Lead.where({ id }).update({
+export async function verifyBuyer(id: string, verified: boolean) {
+  const updated = await db.orm.public.Buyer.where({ id }).update({
     status: verified ? "verified" : "pending"
   });
 
-  const lead = Array.isArray(updated) ? updated[0] : updated;
-  if (!lead) return;
+  const buyer = Array.isArray(updated) ? updated[0] : updated;
+  if (!buyer) return;
 
   await db.orm.public.Activity.create({
     type: verified ? "verification" : "update",
-    name: lead.name,
+    name: buyer.name,
     detail: verified ? "Payment has been verified" : "Payment verification was removed",
   });
 

@@ -1,10 +1,18 @@
 // use prisma-8
 
-model Lead {
+model Referrer {
+  id    String @id @default(uuid())
+  name  String
+  email String @unique
+  phone String
+  code  String @unique
+}
+
+model Buyer {
   id         String   @id @default(uuid())
   name       String
   email      String   @unique
-  code       String   @unique
+  phone      String
   referredBy String?
   status     String   @default("registered")
   color      String

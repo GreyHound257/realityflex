@@ -1,15 +1,25 @@
 export type LeadStatus = 'verified' | 'pending' | 'registered'
 
-export interface Lead {
+export interface Referrer {
   id: string
   name: string
   email: string
+  phone: string
   code: string
+}
+
+export interface Buyer {
+  id: string
+  name: string
+  email: string
+  phone: string
   referredBy: string | null
   date: string
   status: LeadStatus
   color: string
 }
+
+export type Lead = Buyer // For compatibility with older code if needed, but we should migrate fully
 
 export interface Activity {
   id: string

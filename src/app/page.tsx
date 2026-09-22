@@ -27,13 +27,14 @@ import { useApp } from "@/lib/store";
 import type { Lead } from "@/lib/data";
 
 function RegistrationContent() {
-  const { leads, register, copy, notify } = useApp();
+  const { buyers, register, copy, notify } = useApp();
   const searchParams = useSearchParams();
   const [step, setStep] = useState(1);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [referralCode, setReferralCode] = useState(
-    searchParams.get("ref-code")?.toUpperCase() || "",
+    searchParams.get("ref")?.toUpperCase() || "",
   );
   const [error, setError] = useState("");
   const [warning, setWarning] = useState(false);
@@ -109,6 +110,11 @@ function RegistrationContent() {
       setSubmitting(false);
       return;
     }
+    if (phone.trim().length < 5) {
+      setError("Please enter a valid phone number.");
+      setSubmitting(false);
+      return;
+    }
     setError("");
     setStep(2);
     setSubmitting(false);
@@ -133,7 +139,7 @@ function RegistrationContent() {
     if (submitting) return;
     setSubmitting(true);
     setWarning(false);
-    const lead = await register(name, email, code);
+    const lead = await register(name, email, phone, code);
     setRegistered(lead);
     setStep(3);
     setError("");
@@ -143,6 +149,7 @@ function RegistrationContent() {
   function startAgain() {
     setName("");
     setEmail("");
+    setPhone("");
     setReferralCode("");
     setRegistered(null);
     setStep(1);
@@ -292,6 +299,25 @@ function RegistrationContent() {
                   <p className="field-hint">
                     We’ll send your offer details and next steps here.
                   </p>
+
+                  <label className="field-label" htmlFor="phone-number">
+                    Phone number<span>*</span>
+                  </label>
+                  <div className="form-input-wrap">
+                    <UserRound size={17} />
+                    <input
+                      id="phone-number"
+                      type="tel"
+                      autoComplete="tel"
+                      placeholder="Your phone number"
+                      required
+                      value={phone}
+                      onChange={(event) => {
+                        setPhone(event.target.value);
+                        setError("");
+                      }}
+                    />
+                  </div>
                   {error && (
                     <p className="form-error" role="alert">
                       <Info size={15} />
@@ -448,25 +474,9 @@ function RegistrationContent() {
                   <span className="purple-text">.</span>
                 </h2>
                 <p className="registration-intro">
-                  Here’s to your next chapter — and the people you’ll bring
-                  along for the journey.
+                  Here’s to your next chapter.
                 </p>
-                <div className="success-code-card">
-                  <div>
-                    <Link2 size={17} />
-                    <span>YOUR UNIQUE REFERRAL CODE</span>
-                  </div>
-                  <strong>{registered.code}</strong>
-                  <button
-                    onClick={() =>
-                      copy(registered.code, "Your referral code is copied")
-                    }
-                  >
-                    <Copy size={14} />
-                    Copy code
-                  </button>
-                  <p>A little code. A whole world of connections.</p>
-                </div>
+
                 <div className="next-steps">
                   <h3>Let’s lock in your offer.</h3>
                   <div>
@@ -489,30 +499,8 @@ function RegistrationContent() {
                       </span>
                     </p>
                   </div>
-                  <div>
-                    <span>3</span>
-                    <p>
-                      <strong>Share the possibilities</strong>
-                      <span>
-                        Invite friends with your code. Every verified referral
-                        counts.
-                      </span>
-                    </p>
-                  </div>
                 </div>
-                <button
-                  className="button button-primary registration-submit"
-                  onClick={() =>
-                    copy(
-                      `${baseUrl}/?ref=${registered.code}`,
-                      "Your personal referral link is copied",
-                    )
-                  }
-                >
-                  <Link2 size={16} />
-                  Copy my referral link
-                  <ArrowUpRight size={16} />
-                </button>
+
                 <button className="start-again-button" onClick={startAgain}>
                   Register another person
                   <ArrowRight size={13} />

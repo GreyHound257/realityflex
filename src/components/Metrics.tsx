@@ -11,14 +11,14 @@ function Sparkline({ kind, color }: { kind: number; color: string }) {
 }
 
 export default function Metrics({ period = 'This month' }: { period?: string }) {
-  const { leads } = useApp()
-  const scoped = leads.filter(lead => matchesPeriod(lead, period))
-  const referred = scoped.filter(lead => lead.referredBy)
-  const verified = referred.filter(lead => lead.status === 'verified').length
-  const pending = scoped.filter(lead => lead.status === 'pending').length
+  const { buyers } = useApp()
+  const scoped = buyers.filter(buyer => matchesPeriod(buyer, period))
+  const referred = scoped.filter(buyer => buyer.referredBy)
+  const verified = referred.filter(buyer => buyer.status === 'verified').length
+  const pending = scoped.filter(buyer => buyer.status === 'pending').length
   const conversion = referred.length ? (verified / referred.length * 100).toFixed(1) : '0'
   const metrics = [
-    { label: 'Total registered leads', value: scoped.length.toLocaleString(), icon: UsersRound, color: '#8b71d7', change: '18.1%', foot: 'vs. last month', type: 'neutral' },
+    { label: 'Total registered buyers', value: scoped.length.toLocaleString(), icon: UsersRound, color: '#8b71d7', change: '18.1%', foot: 'vs. last month', type: 'neutral' },
     { label: 'Total Verified Referrals', value: verified.toLocaleString(), icon: BadgeCheck, color: '#8862d8', change: '24.6%', foot: 'vs. last month', type: 'featured' },
     { label: 'Pending payments', value: pending.toLocaleString(), icon: Clock3, color: '#d4ab63', change: null, foot: 'Awaiting verification', type: 'amber' },
     { label: 'Referral conversion', value: `${conversion}%`, icon: GitFork, color: '#63a591', change: '8.2%', foot: 'vs. last month', type: 'green' },
