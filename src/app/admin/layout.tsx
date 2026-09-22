@@ -1,6 +1,7 @@
 import { cookies } from 'next/headers'
 import { db } from '@/prisma/db'
 import { AppProvider } from '@/lib/store'
+import { redirect } from 'next/navigation'
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const cookieStore = await cookies()
@@ -10,7 +11,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     return <>{children}</>
   }
   
-  const session = await db.orm.public.Session.where({ id: sessionId }).first()
+  const session = await db.orm.public.Session.where({ id: sessionId }).include("admin").first()
   if (!session || new Date(session.expiresAt) < new Date()) {
     return <>{children}</>
   }
@@ -20,7 +21,12 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const activities = await db.orm.public.Activity.orderBy((a) => a.time.desc()).all()
 
   return (
-    <AppProvider serverBuyers={buyers as any} serverReferrers={referrers as any} serverActivities={activities as any}>
+    <AppProvider
+      serverAdmin={session.admin as any}
+      serverBuyers={buyers as any}
+      serverReferrers={referrers as any}
+      serverActivities={activities as any}
+    >
       {children}
     </AppProvider>
   )
