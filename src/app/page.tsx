@@ -178,11 +178,51 @@ function RegistrationContent() {
         </div>
       </header>
       <main className="registration-main">
-        <section className="registration-story">
-          <img
-            src="/images/flyer.jpg"
-            alt="Reality Flex 3.0 Flyer - Own a land with flexible payment plan"
-          />
+        <section className="registration-story story-text-layout">
+          <div className="story-text-content">
+            <div className="story-pill">
+              <Sparkles size={16} className="pill-icon" />
+              <span>Valid till: 30th Oct., 2026</span>
+            </div>
+            <h1>FLEX YOUR WAY TO<br />LAND OWNERSHIP</h1>
+            <p className="story-description">
+              Secure your future with Reality Flex 3.0. A flexible land ownership plan in Reality Garden City, designed to make your real estate investment journey smooth and accessible.
+            </p>
+            
+            <div className="story-features">
+              <div className="story-feature">
+                <div className="feature-icon-box">
+                  <BadgeCheck size={20} />
+                </div>
+                <div className="feature-text">
+                  <strong>Flexible Payment Plan</strong>
+                  <span>Begin with as low as N50K initial deposit and N45,000 monthly.</span>
+                </div>
+              </div>
+              <div className="story-feature">
+                <div className="feature-icon-box">
+                  <HeartHandshake size={20} />
+                </div>
+                <div className="feature-text">
+                  <strong>Premium Location</strong>
+                  <span>250SQM plots at Treasure Land District 2, Obafe Road, After Siun Junc., Abeokuta Express Way.</span>
+                </div>
+              </div>
+              <div className="story-feature">
+                <div className="feature-icon-box">
+                  <CheckCheck size={20} />
+                </div>
+                <div className="feature-text">
+                  <strong>24 Months Structure</strong>
+                  <span>Convenient payment structure spread across 2 years for your peace of mind.</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="story-text-footer">
+            <span>08079058878</span>
+            <span><strong style={{ opacity: 0.5, fontWeight: 400 }}>Follow us:</strong> DEREALITYSPEC</span>
+          </div>
         </section>
         <section
           className={`registration-form-section ${step === 3 ? "success-form-section" : ""}`}

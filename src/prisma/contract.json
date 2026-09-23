@@ -55,7 +55,7 @@
               "time": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamptz-string@1",
+                  "codecId": "pg/timestamptz-temporal@1",
                   "kind": "scalar"
                 }
               },
@@ -169,7 +169,7 @@
               "date": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamptz-string@1",
+                  "codecId": "pg/timestamptz-temporal@1",
                   "kind": "scalar"
                 }
               },
@@ -194,6 +194,13 @@
                   "kind": "scalar"
                 }
               },
+              "occupation": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
               "phone": {
                 "nullable": false,
                 "type": {
@@ -202,6 +209,13 @@
                 }
               },
               "referredBy": {
+                "nullable": true,
+                "type": {
+                  "codecId": "pg/text@1",
+                  "kind": "scalar"
+                }
+              },
+              "source": {
                 "nullable": true,
                 "type": {
                   "codecId": "pg/text@1",
@@ -234,11 +248,17 @@
                 "name": {
                   "column": "name"
                 },
+                "occupation": {
+                  "column": "occupation"
+                },
                 "phone": {
                   "column": "phone"
                 },
                 "referredBy": {
                   "column": "referredBy"
+                },
+                "source": {
+                  "column": "source"
                 },
                 "status": {
                   "column": "status"
@@ -321,7 +341,7 @@
               "expiresAt": {
                 "nullable": false,
                 "type": {
-                  "codecId": "pg/timestamptz-string@1",
+                  "codecId": "pg/timestamptz-temporal@1",
                   "kind": "scalar"
                 }
               },
@@ -394,7 +414,7 @@
                   "nullable": false
                 },
                 "time": {
-                  "codecId": "pg/timestamptz-string@1",
+                  "codecId": "pg/timestamptz-temporal@1",
                   "default": {
                     "expression": "now()",
                     "kind": "function"
@@ -463,7 +483,7 @@
                   "nullable": false
                 },
                 "date": {
-                  "codecId": "pg/timestamptz-string@1",
+                  "codecId": "pg/timestamptz-temporal@1",
                   "default": {
                     "expression": "now()",
                     "kind": "function"
@@ -486,12 +506,22 @@
                   "nativeType": "text",
                   "nullable": false
                 },
+                "occupation": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
                 "phone": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
                   "nullable": false
                 },
                 "referredBy": {
+                  "codecId": "pg/text@1",
+                  "nativeType": "text",
+                  "nullable": true
+                },
+                "source": {
                   "codecId": "pg/text@1",
                   "nativeType": "text",
                   "nullable": true
@@ -577,7 +607,7 @@
                   "nullable": false
                 },
                 "expiresAt": {
-                  "codecId": "pg/timestamptz-string@1",
+                  "codecId": "pg/timestamptz-temporal@1",
                   "nativeType": "timestamptz",
                   "nullable": false
                 },
@@ -628,7 +658,7 @@
         "kind": "postgres-schema"
       }
     },
-    "storageHash": "5bd576b875953eb57491ea9fcfc20fc19a2687d111777a21d8fb66c07f570bf4"
+    "storageHash": "e63769ddbbfab0d2a861b773586e2edfe32be976c2556b0554bbcdff0cca2958"
   },
   "execution": {
     "executionHash": "ebfbd183cb8989d7bf459dbdf719177494ddfc2ac9bcfcd5d66aabba8a092bee",
