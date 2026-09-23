@@ -31,7 +31,8 @@ export default function LeadDrawer({
   onClose: () => void;
   onSelect: (id: string) => void;
 }) {
-  const { buyers, referrers, setVerified } = useApp();
+  const { buyers, referrers, setVerified, copy } = useApp();
+  const [copiedLink, setCopiedLink] = useState(false);
   
   const buyer = buyers.find((item) => item.id === leadId);
   const referrer = referrers.find((item) => item.id === leadId);
@@ -112,10 +113,29 @@ export default function LeadDrawer({
           </div>
           
           {isReferrer && (
-            <div>
-              <span>Referral code</span>
-              <Code>{referrer.code}</Code>
-            </div>
+            <>
+              <div>
+                <span>Referral code</span>
+                <Code>{referrer.code}</Code>
+              </div>
+              <div>
+                <span>Referral link</span>
+                <button 
+                  className="text-button" 
+                  style={{ display: "flex", alignItems: "center", gap: "6px", padding: 0 }}
+                  onClick={() => {
+                    copy(`${window.location.origin}/?ref=${referrer.code}`, 'Referral link copied');
+                    setCopiedLink(true);
+                    setTimeout(() => setCopiedLink(false), 3000);
+                  }}
+                >
+                  {copiedLink ? <Check size={14} style={{ color: "var(--green)" }} /> : <Copy size={14} />}
+                  <span style={{ fontSize: "14px", fontWeight: 600, color: copiedLink ? "var(--green)" : "inherit" }}>
+                    {copiedLink ? "Copied" : "Copy"}
+                  </span>
+                </button>
+              </div>
+            </>
           )}
 
           {isBuyer && (
