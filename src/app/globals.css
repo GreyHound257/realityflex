@@ -115,6 +115,11 @@ button {
   padding: 30px 17px 0;
   display: flex;
   flex-direction: column;
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.sidebar::-webkit-scrollbar {
+  display: none;
 }
 .brand {
   display: flex;
@@ -2652,73 +2657,80 @@ button {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  background: #bfc1c0;
+  background: #f8f9fa;
+  border: 1px solid var(--border);
 }
 .registration-story > img {
   width: 100%;
   height: 100%;
-  object-fit: cover;
+  padding: 40px;
+  object-fit: contain;
   position: absolute;
   inset: 0;
-  object-position: 40% 50%;
-  filter: saturate(0.55);
+  object-position: center;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.registration-story:hover > img {
+  transform: scale(1.03);
 }
 .story-overlay {
   position: absolute;
   inset: 0;
   background: linear-gradient(
     180deg,
-    #22283233 0%,
-    #2b323c09 18%,
-    #29334180 42%,
-    #1d2631e6 100%
+    transparent 0%,
+    transparent 60%,
+    #f8f9fa 85%,
+    #f8f9fa 100%
   );
+  pointer-events: none;
 }
 .story-top-label {
   display: flex;
   align-items: center;
   gap: 8px;
   position: relative;
-  color: #ffffffdb;
+  color: var(--ink);
   font-size: 8px;
-  letter-spacing: 2px;
-  font-weight: 500;
-  padding: 39px 40px;
+  font-weight: 600;
+  letter-spacing: 1.8px;
+  padding: 38px 45px;
 }
 .story-top-label > span {
-  width: 4px;
-  height: 4px;
+  width: 8px;
+  height: 8px;
+  background: var(--blue);
   border-radius: 50%;
-  background: #fff;
 }
 .story-content {
   position: relative;
-  color: white;
+  color: var(--ink);
   padding: 160px 45px 45px;
   margin-top: auto;
 }
 .story-star {
-  color: #bdd3f2;
+  color: var(--blue);
   margin-bottom: 24px;
 }
 .story-content h1 {
   font-size: 43px;
   letter-spacing: -1.9px;
   line-height: 1.25;
-  font-weight: 500;
+  font-weight: 700;
+  color: var(--ink);
 }
 .story-content h1 em {
   font-family: Georgia, serif;
   font-weight: 400;
   letter-spacing: -1.4px;
   font-size: 44px;
-  color: #a8c8f4;
+  color: var(--blue);
   line-height: 1.5;
 }
 .story-content > p {
-  font-size: 12px;
-  color: #c3d1e5a6;
-  line-height: 1.9;
+  font-size: 13px;
+  color: var(--muted);
+  line-height: 1.7;
   max-width: 326px;
   margin-top: 20px;
   letter-spacing: 0.1px;
@@ -2727,7 +2739,7 @@ button {
   width: 100%;
   max-width: 365px;
   height: 1px;
-  background: #bccce32e;
+  background: var(--border);
   margin: 32px 0 24px;
 }
 .community-proof {
@@ -2777,19 +2789,19 @@ button {
 }
 .community-proof strong {
   font-size: 9px;
-  color: #ccd9ecd6;
-  font-weight: 500;
+  color: var(--ink);
+  font-weight: 600;
 }
 .community-proof > div:last-child > span {
   font-size: 8px;
-  color: #adc1dd9e;
+  color: var(--muted);
 }
 .story-bottom-label {
   position: relative;
   padding: 0 45px 31px;
   font-size: 7px;
   letter-spacing: 1.6px;
-  color: #a3b8d470;
+  color: var(--muted);
 }
 .registration-form-section {
   display: flex;
@@ -5137,15 +5149,16 @@ button {
     border-radius: 9px;
   }
   .registration-story > img {
-    object-position: 50% 37%;
+    object-position: center;
+    padding: 20px;
   }
   .story-overlay {
     background: linear-gradient(
       180deg,
-      #22283235 0%,
-      #2a344240 20%,
-      #1e2b3e99 47%,
-      #1b2736ed 100%
+      transparent 0%,
+      transparent 55%,
+      #f8f9fa 80%,
+      #f8f9fa 100%
     );
   }
   .story-top-label {
@@ -6816,6 +6829,4 @@ button {
 .registration-step.step-active > strong {
   color: #4671af;
 }
-.story-content > p {
-  color: #c3d1e5c7;
-}
+

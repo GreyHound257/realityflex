@@ -180,44 +180,9 @@ function RegistrationContent() {
       <main className="registration-main">
         <section className="registration-story">
           <img
-            src="/images/registration.jpg"
-            alt="Sculptural white residential architecture with elegant curved balconies"
+            src="/images/flyer.jpg"
+            alt="Reality Flex 3.0 Flyer - Own a land with flexible payment plan"
           />
-          <div className="story-overlay" />
-          <span className="story-top-label">
-            <span />A COMMUNITY OF POSSIBILITIES
-          </span>
-          <div className="story-content">
-            <div className="story-star">
-              <Sparkles size={28} strokeWidth={1.3} />
-            </div>
-            <h1>
-              A new place.
-              <br />A fresh perspective.
-              <br />
-              <em>A shared beginning.</em>
-            </h1>
-            <p>
-              Extraordinary opportunities start with the right connections. Your
-              next chapter begins here.
-            </p>
-            <div className="story-divider" />
-            <div className="community-proof">
-              <div className="avatar-stack">
-                <span>OR</span>
-                <span>PB</span>
-                <span>LS</span>
-                <span>+</span>
-              </div>
-              <div>
-                <strong>Good people. Real possibilities.</strong>
-                <span>Be part of a growing community.</span>
-              </div>
-            </div>
-          </div>
-          <span className="story-bottom-label">
-            THOUGHTFULLY CONNECTED. BEAUTIFULLY REWARDED.
-          </span>
         </section>
         <section
           className={`registration-form-section ${step === 3 ? "success-form-section" : ""}`}
