@@ -10,7 +10,7 @@ export default async function SettingsPage() {
   if (!sessionId) redirect("/admin/login");
 
   const session = await db.orm.public.Session.where({ id: sessionId }).first();
-  if (!session || new Date(session.expiresAt) < new Date()) redirect("/admin/login");
+  if (!session || (session.expiresAt as any).epochMilliseconds < Date.now()) redirect("/admin/login");
 
   const admin = await db.orm.public.Admin.where({ id: session.adminId }).first();
   if (!admin) redirect("/admin/login");

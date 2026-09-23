@@ -65,7 +65,7 @@ async function createSession(adminId: string) {
   
   const session = await db.orm.public.Session.create({
     adminId,
-    expiresAt: expiresAt.toISOString(),
+    expiresAt: (globalThis as any).Temporal.Instant.from(expiresAt.toISOString()),
   })
 
   const cookieStore = await cookies()

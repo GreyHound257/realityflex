@@ -18,6 +18,7 @@ import {
   Mail,
   ShieldCheck,
   Sparkles,
+  Timer,
   UserRound,
 } from "lucide-react";
 import Link from "next/link";
@@ -25,6 +26,58 @@ import { useSearchParams } from "next/navigation";
 import { Brand, Dialog, DialogHeader } from "@/components/Ui";
 import { useApp } from "@/lib/store";
 import type { Lead } from "@/lib/data";
+
+function CountdownTimer() {
+  const targetDate = new Date("2026-10-31T00:00:00+01:00").getTime();
+  const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+
+  useEffect(() => {
+    const updateTime = () => {
+      const now = new Date().getTime();
+      const distance = targetDate - now;
+
+      if (distance < 0) {
+        setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+        return;
+      }
+
+      setTimeLeft({
+        days: Math.floor(distance / (1000 * 60 * 60 * 24)),
+        hours: Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)),
+        minutes: Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)),
+        seconds: Math.floor((distance % (1000 * 60)) / 1000),
+      });
+    };
+    
+    updateTime();
+    const interval = setInterval(updateTime, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  return (
+    <div className="countdown-grid">
+      <div className="countdown-item">
+        <strong>{timeLeft.days.toString().padStart(2, '0')}</strong>
+        <span>Days</span>
+      </div>
+      <div className="countdown-separator">:</div>
+      <div className="countdown-item">
+        <strong>{timeLeft.hours.toString().padStart(2, '0')}</strong>
+        <span>Hours</span>
+      </div>
+      <div className="countdown-separator">:</div>
+      <div className="countdown-item">
+        <strong>{timeLeft.minutes.toString().padStart(2, '0')}</strong>
+        <span>Mins</span>
+      </div>
+      <div className="countdown-separator">:</div>
+      <div className="countdown-item">
+        <strong>{timeLeft.seconds.toString().padStart(2, '0')}</strong>
+        <span>Secs</span>
+      </div>
+    </div>
+  );
+}
 
 function RegistrationContent() {
   const { buyers, register, copy, notify } = useApp();
@@ -48,6 +101,19 @@ function RegistrationContent() {
     name: string;
     code: string;
   } | null>(null);
+
+  const [showCountdown, setShowCountdown] = useState(false);
+
+  useEffect(() => {
+    if (!sessionStorage.getItem("countdownSeen")) {
+      setShowCountdown(true);
+    }
+  }, []);
+
+  function closeCountdown() {
+    setShowCountdown(false);
+    sessionStorage.setItem("countdownSeen", "true");
+  }
 
   useEffect(() => {
     const code = referralCode.trim();
@@ -519,6 +585,27 @@ function RegistrationContent() {
           </div>
         </section>
       </main>
+      {showCountdown && (
+        <Dialog
+          title="Offer closing soon"
+          onClose={closeCountdown}
+          className="countdown-dialog"
+        >
+          <DialogHeader
+            title="Time is running out."
+            eyebrow="SPECIAL OFFER"
+            onClose={closeCountdown}
+          />
+          <div className="countdown-body">
+            <p>Reality Flex 3.0 registration closes on <strong>31st October at 12:00 AM (GMT+1)</strong>. Secure your plot now before the opportunity ends.</p>
+            <CountdownTimer />
+            <button className="button button-primary full-width" onClick={closeCountdown}>
+              Continue to Registration
+              <ArrowRight size={15} />
+            </button>
+          </div>
+        </Dialog>
+      )}
       {warning && (
         <Dialog
           title="Proceed without a referral code?"

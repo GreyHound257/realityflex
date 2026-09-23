@@ -12,7 +12,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   }
   
   const session = await db.orm.public.Session.where({ id: sessionId }).include("admin").first()
-  if (!session || new Date(session.expiresAt) < new Date()) {
+  if (!session || (session.expiresAt as any).epochMilliseconds < Date.now()) {
     return <>{children}</>
   }
 
