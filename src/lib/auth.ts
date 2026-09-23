@@ -26,6 +26,12 @@ export async function hashPassword(password: string): Promise<string> {
 }
 
 export async function verifyPassword(password: string, hash: string): Promise<boolean> {
+  // Support legacy bcrypt hashes used in database seeds
+  if (hash.startsWith('$2a$') || hash.startsWith('$2b$')) {
+    const bcrypt = await import('bcryptjs');
+    return bcrypt.compare(password, hash);
+  }
+
   const [salt, key] = hash.split(':')
   if (!salt || !key) return false
   try {
