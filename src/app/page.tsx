@@ -366,7 +366,7 @@ function RegistrationContent() {
                     <input
                       className="referral-code-input"
                       aria-label="Referral Code"
-                      placeholder="e.g. RF3-AWZ3"
+                      placeholder="e.g. RF3-ORG1"
                       maxLength={8}
                       value={referralCode}
                       onChange={(event) => {

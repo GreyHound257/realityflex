@@ -3,14 +3,16 @@
 :root {
   font-family: "DM Sans", sans-serif;
   color: #2c333d;
-  background: #f8f9fb;
+  background: #ffffff;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   --purple: #0e4fab;
   --purple-dark: #093375;
-  --purple-soft: #e6f0fa;
+  --red-soft: #fdeaea;
+  --red: #AD0D0B;
+  --red-dark: #8c0a09;
   --ink: #272f3b;
   --muted: #7d8692;
   --border: #dae0e9;
@@ -67,7 +69,7 @@ input::placeholder {
 input[type="checkbox"] {
   width: 14px;
   height: 14px;
-  accent-color: var(--purple);
+  accent-color: var(--red);
   cursor: pointer;
   border: 1px solid #c8d1dc;
   border-radius: 4px;
@@ -132,7 +134,7 @@ button {
   color: #1e2f46;
 }
 .brand-mark {
-  color: var(--purple);
+  color: var(--red);
   display: flex;
   align-items: center;
   padding-right: 1px;
@@ -142,7 +144,7 @@ button {
   margin-top: 4px;
 }
 .brand-period {
-  color: var(--purple);
+  color: var(--red);
 }
 .sidebar-brand {
   padding: 0 11px 27px;
@@ -226,12 +228,12 @@ button {
     color 0.2s;
 }
 .nav-item:hover {
-  background: #deeafa;
-  color: #3c6bac;
+  background: var(--red-soft);
+  color: var(--red);
 }
 .nav-item.nav-active {
-  background: #ccdffa;
-  color: #2e72d1;
+  background: var(--red-soft);
+  color: var(--red);
   font-weight: 650;
 }
 .nav-active::before {
@@ -463,8 +465,8 @@ button {
   flex-shrink: 0;
 }
 .icon-button:hover {
-  background: #d7e3f4;
-  color: var(--purple);
+  background: var(--red-soft);
+  color: var(--red);
 }
 .notification-button {
   position: relative;
@@ -541,15 +543,15 @@ button {
   text-decoration: none;
 }
 .button-primary {
-  background: var(--purple);
+  background: var(--red);
   color: white;
-  border-color: var(--purple);
-  box-shadow: 0 2px 2px #2e67b610;
+  border-color: var(--red);
+  box-shadow: 0 2px 2px #ad0d0b20;
 }
 .button-primary:hover {
-  background: var(--purple-dark);
-  border-color: var(--purple-dark);
-  box-shadow: 0 3px 10px #2878e720;
+  background: var(--red-dark);
+  border-color: var(--red-dark);
+  box-shadow: 0 3px 10px #ad0d0b30;
 }
 .button-primary:disabled {
   opacity: 0.6;
@@ -561,15 +563,15 @@ button {
   box-shadow: 0 1px 2px #0c284f03;
 }
 .button-white:hover {
-  border-color: #a7c1e5;
-  background: #ddebff;
+  border-color: #f7a8a8;
+  background: var(--red-soft);
 }
 .button-light {
-  color: var(--purple);
-  background: #d0e3fe;
+  color: var(--red);
+  background: var(--red-soft);
 }
 .button-light:hover {
-  background: #c2dbff;
+  background: #fcd5d5;
 }
 .button-small {
   min-height: 32px;
@@ -604,7 +606,7 @@ button {
   white-space: nowrap;
 }
 .text-button:hover {
-  color: var(--purple-dark);
+  color: var(--red-dark);
 }
 .date-picker-container,
 .filter-container {
@@ -652,11 +654,11 @@ button {
   color: #6c809b;
 }
 .date-popover > button:hover {
-  background: #dce9fb;
+  background: var(--red-soft);
 }
 .date-popover > button.selected {
   background: #cde1fd;
-  color: var(--purple);
+  color: var(--red);
 }
 .date-popover > p {
   font-size: 9px;
@@ -709,7 +711,7 @@ button {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background: #deeafa;
+  background: var(--red-soft);
   color: #5382c3;
   font-size: 11px;
   width: 100%;
@@ -729,10 +731,16 @@ button {
   border-radius: 9px;
   padding: 17px 19px 15px;
   box-shadow: 0 1px 2px #051d3f02;
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+.metric-card:hover {
+  border-color: var(--red);
+  box-shadow: 0 4px 12px var(--red-soft);
+  transform: translateY(-2px);
 }
 .metric-featured {
-  border-color: #b9d6ff;
-  background: #d5e6ff;
+  border-color: #f7a8a8;
+  background: var(--red-soft);
   position: relative;
   overflow: hidden;
 }
@@ -740,7 +748,7 @@ button {
   content: "";
   width: 120px;
   height: 120px;
-  border: 1px solid #c7ddfc;
+  border: 1px solid #f9cdcd;
   position: absolute;
   right: -64px;
   top: -68px;
@@ -761,7 +769,7 @@ button {
   white-space: nowrap;
 }
 .metric-featured .metric-top {
-  color: #4f7dbe;
+  color: var(--red);
 }
 .metric-icon {
   display: flex;
@@ -772,7 +780,7 @@ button {
   z-index: 1;
 }
 .metric-featured .metric-icon {
-  color: #6292d5;
+  color: var(--red);
 }
 .metric-amber .metric-icon {
   color: #caad7f;
@@ -796,7 +804,7 @@ button {
   font-weight: 750;
 }
 .metric-featured .metric-middle > strong {
-  color: #3b69a9;
+  color: var(--red-dark);
 }
 .sparkline {
   width: 82px;
@@ -827,8 +835,8 @@ button {
   border-radius: 4px;
 }
 .metric-featured .trend-badge {
-  background: #c3dbfd;
-  color: #5688ce;
+  background: #fcd5d5;
+  color: var(--red);
 }
 .metric-amber .metric-foot {
   gap: 6px;
@@ -939,8 +947,8 @@ button {
   text-align: center;
 }
 .table-tab:hover {
-  background: #d8e6f9;
-  color: #5b81b6;
+  background: var(--red-soft);
+  color: var(--red);
 }
 .table-tab-active {
   background: white;
@@ -1084,7 +1092,7 @@ button {
   outline-offset: -3px;
 }
 .leads-table tbody tr:hover {
-  background: #dfecff;
+  background: var(--red-soft);
 }
 .leads-table tbody tr.row-selected {
   background: #dceaff;
@@ -1300,7 +1308,7 @@ button {
   font-size: 9px;
 }
 .page-number:hover:not(.page-current) {
-  background: #deeafa;
+  background: var(--red-soft);
 }
 .page-current {
   background: #cbdffa;
@@ -1411,7 +1419,7 @@ button {
   border-top: 0;
 }
 .ranked-item:hover {
-  background: #e0edff;
+  background: var(--red-soft);
 }
 .rank-number {
   font-size: 9px;
@@ -1605,7 +1613,7 @@ button {
   transform: rotate(-7deg);
 }
 .network-node {
-  background: #e0edff;
+  background: var(--red-soft);
   color: #88acde;
   border: 1px solid #c2d6f2;
   width: 24px;
@@ -1764,7 +1772,7 @@ button {
   background: #c6dcfa;
 }
 .chart-bar-verified {
-  background: #779ed6;
+  background: var(--red);
 }
 .chart-bar > span {
   position: absolute;
@@ -1866,7 +1874,7 @@ button {
   align-items: center;
   border: 1px solid #bed4f2;
   border-radius: 6px;
-  background: #e0edff;
+  background: var(--red-soft);
   overflow: hidden;
 }
 .copy-input input {
@@ -2104,7 +2112,7 @@ button {
   margin-top: 7px;
 }
 .lead-email:hover {
-  color: #3d72bd;
+  color: var(--red);
 }
 .lead-profile > .status-badge {
   margin-left: auto;
@@ -2267,10 +2275,10 @@ button {
   border-radius: 50%;
   box-shadow: 0 1px 3px #263a5518;
   transition: transform 0.2s;
-  color: #5c88c5;
+  color: var(--red);
 }
 .toggle-checked {
-  background: #6f97cf;
+  background: var(--red);
 }
 .toggle-checked > span {
   transform: translateX(13px);
@@ -2627,7 +2635,7 @@ button {
   padding: 5px 0;
 }
 .registration-about-link:hover {
-  color: var(--purple);
+  color: var(--red);
 }
 .header-divider {
   height: 16px;
@@ -2858,13 +2866,13 @@ button {
   margin: 0 1px 0 4px;
 }
 .registration-step.step-active {
-  color: #5d8bcb;
+  color: var(--red);
 }
 .step-active > span {
-  background: #779ed6;
-  border-color: #779ed6;
+  background: var(--red);
+  border-color: var(--red);
   color: #fff;
-  box-shadow: 0 0 0 3px #cde2ff;
+  box-shadow: 0 0 0 3px var(--red-soft);
 }
 .registration-step.step-complete {
   color: #7f9ec8;
@@ -2924,8 +2932,8 @@ button {
     box-shadow 0.2s;
 }
 .form-input-wrap:focus-within {
-  border-color: #77a1dc;
-  box-shadow: 0 0 0 3px #cce1fe;
+  border-color: #e57373;
+  box-shadow: 0 0 0 3px #ffe1e1;
 }
 .form-input-wrap input {
   width: 100%;
@@ -2951,12 +2959,12 @@ button {
   font-size: 11px;
   justify-content: space-between;
   padding: 12px 17px;
-  background: #5f8cca;
-  border-color: #5f8cca;
+  
+  
 }
 .registration-submit:hover {
-  background: #4576b9;
-  border-color: #4576b9;
+  
+  
 }
 .registration-terms {
   font-size: 8.5px;
@@ -3033,7 +3041,7 @@ button {
   align-items: center;
   justify-content: center;
   background: #c6daf7;
-  color: #6f97cf;
+  color: var(--red);
   font-size: 10px;
 }
 .registration-review > div {
@@ -3053,7 +3061,7 @@ button {
 .registration-review > button {
   font-size: 9px;
   background: none;
-  color: #6690ca;
+  color: var(--red);
   margin-left: auto;
   padding: 4px 0;
   text-decoration: underline;
@@ -3097,7 +3105,7 @@ button {
   padding: 13px 12px;
   font-size: 16px;
   letter-spacing: 2px;
-  color: #5b8acc;
+  color: var(--red);
   outline: none;
 }
 .referral-code-input::placeholder {
@@ -3229,7 +3237,7 @@ button {
   font-size: 32px;
 }
 .purple-text {
-  color: #6f97cf;
+  color: var(--red);
 }
 .registration-success .registration-intro {
   font-size: 11px;
@@ -6206,13 +6214,13 @@ button {
   color: #2b394d;
 }
 .metric-featured .metric-top {
-  color: #4c74ac;
+  color: var(--red);
 }
 .metric-featured .metric-middle > strong {
-  color: #3c6aab;
+  color: var(--red);
 }
 .metric-featured .trend-badge {
-  color: #3e74c1;
+  color: var(--red-dark);
 }
 .section-title-line h2,
 .insight-heading h2,
@@ -6246,7 +6254,7 @@ button {
   color: #46566e;
 }
 .referral-code {
-  color: #5681bc;
+  color: var(--red);
 }
 .code-muted {
   color: #7791b4;
@@ -6402,7 +6410,7 @@ button {
   color: #86a278;
 }
 .toggle-checked {
-  background: #6690ca;
+  background: var(--red);
 }
 .referral-drawer-note p {
   color: #698ab8;
@@ -6454,19 +6462,19 @@ button {
   color: #829abb;
 }
 .registration-submit {
-  background: #4c7ec2;
-  border-color: #4c7ec2;
+  
+  
 }
 .registration-submit:hover {
-  background: #3f6dad;
-  border-color: #3f6dad;
+  
+  
 }
 .registration-step.step-active {
-  color: #5681bc;
+  color: var(--red);
 }
 .step-active > span {
-  background: #608dcb;
-  border-color: #608dcb;
+  background: var(--red);
+  border-color: var(--red);
 }
 .registration-trust,
 .registration-terms {
@@ -6802,7 +6810,7 @@ button {
   color: #6a809e;
 }
 .table-tab-active {
-  color: #3c6aab;
+  color: var(--red);
 }
 .metric-top {
   color: #5c6c84;
@@ -6827,6 +6835,6 @@ button {
   color: #7b9ac5;
 }
 .registration-step.step-active > strong {
-  color: #4671af;
+  color: var(--red);
 }
 
