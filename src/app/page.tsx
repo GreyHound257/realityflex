@@ -196,7 +196,7 @@ function RegistrationContent() {
                 </div>
                 <div className="feature-text">
                   <strong>Flexible Payment Plan</strong>
-                  <span>Begin with as low as N50K initial deposit and N45,000 monthly.</span>
+                  <span>Begin with as low as N50K initial deposit and N45,000 monthly. Total amounting to N1,113,000.</span>
                 </div>
               </div>
               <div className="story-feature">

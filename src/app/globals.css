@@ -5148,7 +5148,7 @@ button {
   }
   .registration-main {
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     min-height: auto;
   }
   .registration-story, .admin-login-story {
@@ -6984,3 +6984,6 @@ button {
     max-width: 100%;
   }
 }
+
+
+
