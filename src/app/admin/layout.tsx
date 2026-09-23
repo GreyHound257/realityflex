@@ -20,12 +20,15 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const referrers = await db.orm.public.Referrer.all()
   const activities = await db.orm.public.Activity.orderBy((a) => a.time.desc()).all()
 
+  const serializedBuyers = buyers.map(b => ({ ...b, date: (b.date as any).toString() }))
+  const serializedActivities = activities.map(a => ({ ...a, time: (a.time as any).toString() }))
+
   return (
     <AppProvider
       serverAdmin={session.admin as any}
-      serverBuyers={buyers as any}
+      serverBuyers={serializedBuyers as any}
       serverReferrers={referrers as any}
-      serverActivities={activities as any}
+      serverActivities={serializedActivities as any}
     >
       {children}
     </AppProvider>
