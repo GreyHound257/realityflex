@@ -60,8 +60,8 @@ export async function logout() {
 }
 
 async function createSession(adminId: string) {
-  // Session expires in 7 days
-  const expiresAt = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+  // Session expires in 10 minutes
+  const expiresAt = new Date(Date.now() + 10 * 60 * 1000)
   
   const session = await db.orm.public.Session.create({
     adminId,

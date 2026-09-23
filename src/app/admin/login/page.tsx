@@ -45,7 +45,10 @@ export default function LoginPage() {
         const res = await login(formData)
         if (res?.error) setError(res.error)
       }
-    } catch (err) {
+    } catch (err: any) {
+      if (err?.message?.includes('NEXT_REDIRECT') || err?.digest?.includes('NEXT_REDIRECT')) {
+        throw err;
+      }
       setError('An unexpected error occurred.')
     } finally {
       setSubmitting(false)
@@ -68,9 +71,9 @@ export default function LoginPage() {
         </div>
       </header>
       <main className="registration-main">
-        <section className="registration-story">
+        <section className="admin-login-story">
           <img src="/images/registration.jpg" alt="Architectural visual" style={{ filter: 'brightness(0.6)' }} />
-          <div className="story-overlay" style={{ background: 'linear-gradient(to top, rgba(14, 79, 171, 0.9), transparent)' }} />
+          <div className="story-overlay" style={{ background: 'linear-gradient(to top, rgba(173, 13, 11, 0.95), rgba(173, 13, 11, 0.2))' }} />
           <span className="story-top-label"><span />RESTRICTED ACCESS</span>
           <div className="story-content">
             <div className="story-star"><ShieldCheck size={28} strokeWidth={1.3} /></div>

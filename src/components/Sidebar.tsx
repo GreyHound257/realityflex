@@ -43,7 +43,7 @@ export default function Sidebar({ open, onClose, onHelp }: { open: boolean; onCl
       </nav>
       <div className="nav-group-label tools-label">MANAGE</div>
       <nav className="main-nav" aria-label="Workspace tools">
-        <Link href="/" className="nav-item">
+        <Link href="/" className="nav-item" target="_blank" rel="noopener noreferrer">
           <ExternalLink size={18} strokeWidth={1.7} />
           <span>Registration page</span>
           <ArrowUpRight size={14} className="nav-end-icon" />
@@ -65,7 +65,7 @@ export default function Sidebar({ open, onClose, onHelp }: { open: boolean; onCl
           <div className="grow-icon"><Sparkles size={18} /></div>
           <h3>Good things grow together.</h3>
           <p>Share your registration page.<br />Build a stronger network.</p>
-          <Link href="/">Preview registration <ArrowUpRight size={15} /></Link>
+          <Link href="/" target="_blank" rel="noopener noreferrer">Preview registration <ArrowUpRight size={15} /></Link>
           <span className="grow-decoration" />
         </div>
         <button className="help-link" onClick={onHelp}>
