@@ -6,6 +6,12 @@ import { type Activity, type Buyer, type Referrer } from './data'
 import { createReferrer, registerBuyer, verifyBuyer } from '@/actions'
 import { useRouter } from 'next/navigation'
 
+interface Admin {
+  id: string
+  name: string
+  email: string
+}
+
 interface AppState {
   buyers: Buyer[]
   referrers: Referrer[]
@@ -23,27 +29,33 @@ interface AppState {
 
 const AppContext = createContext<AppState | null>(null)
 
-function readStored<T>(key: string, fallback: T): T {
-  if (typeof window === 'undefined') return fallback
-  try {
-    const stored = localStorage.getItem(key)
-    return stored ? JSON.parse(stored) as T : fallback
-  } catch { return fallback }
-}
+export function AppProvider({
+  children,
+  serverAdmin,
+  serverBuyers,
+  serverReferrers,
+  serverActivities
+}: {
+  children: ReactNode,
+  serverAdmin?: Admin,
+  serverBuyers: Buyer[],
+  serverReferrers: Referrer[],
+  serverActivities: Activity[]
+}) {
+  const [buyers, setBuyers] = useState<Buyer[]>(serverBuyers)
+  const [referrers, setReferrers] = useState<Referrer[]>(serverReferrers)
+  const [activities, setActivities] = useState<Activity[]>(serverActivities)
+  const [adminName, setAdminName] = useState(serverAdmin?.name || 'Alex Morgan')
 
-export function AppProvider({ children, serverBuyers, serverReferrers, serverActivities }: { children: ReactNode, serverBuyers: Buyer[], serverReferrers: Referrer[], serverActivities: Activity[] }) {
-  const [isClient, setIsClient] = useState(false)
-  const [adminName, setAdminName] = useState('Alex Morgan')
   const [toast, setToast] = useState('')
   const [isPending, startTransition] = useTransition()
   const router = useRouter()
 
-  useEffect(() => {
-    setIsClient(true)
-    setAdminName(readStored('drs-admin-name', 'Alex Morgan'))
-  }, [])
+  useEffect(() => { setBuyers(serverBuyers) }, [serverBuyers])
+  useEffect(() => { setReferrers(serverReferrers) }, [serverReferrers])
+  useEffect(() => { setActivities(serverActivities) }, [serverActivities])
+  useEffect(() => { if (serverAdmin?.name) setAdminName(serverAdmin.name) }, [serverAdmin])
 
-  useEffect(() => { if (isClient) localStorage.setItem('drs-admin-name', JSON.stringify(adminName)) }, [adminName, isClient])
   useEffect(() => {
     if (!toast) return
     const timer = window.setTimeout(() => setToast(''), 4500)
@@ -51,20 +63,51 @@ export function AppProvider({ children, serverBuyers, serverReferrers, serverAct
   }, [toast])
 
   function setVerified(id: string, verified: boolean) {
+    const previousStatus = buyers.find(b => b.id === id)?.status;
+    const newStatus = verified ? 'verified' : 'pending';
+
+    // Optimistic update
+    setBuyers(prev => prev.map(b => b.id === id ? { ...b, status: newStatus } : b))
+
+    const activity: Activity = {
+      id: crypto.randomUUID(),
+      type: verified ? 'verification' : 'update',
+      name: buyers.find(b => b.id === id)?.name || 'Unknown',
+      detail: verified ? "Payment has been verified" : "Payment verification was removed",
+      time: new Date().toISOString()
+    };
+
+    setActivities(prev => [activity, ...prev]);
+
     startTransition(async () => {
-      await verifyBuyer(id, verified)
-      setToast(verified ? `Payment verified` : `Payment verification removed`)
+      try {
+        await verifyBuyer(id, verified)
+        setToast(verified ? `Payment verified` : `Payment verification removed`)
+      } catch (err) {
+        // Revert on error
+        setBuyers(prev => prev.map(b => b.id === id ? { ...b, status: previousStatus || 'pending' } : b))
+        setActivities(prev => prev.filter(a => a.id !== activity.id));
+        setToast('Failed to update verification status')
+      }
     })
   }
 
   async function createRef(name: string, email: string, phone: string) {
+    // We can't fully optimistically generate a guaranteed unique referral code,
+    // so we'll just wait for the server action to return the newly created referrer.
     const referrer = await createReferrer(name, email, phone)
-    return referrer as unknown as Referrer
+
+    const newReferrer = referrer as unknown as Referrer;
+    setReferrers(prev => [...prev, newReferrer])
+    return newReferrer
   }
 
   async function register(name: string, email: string, phone: string, referredBy: string | null) {
     const buyer = await registerBuyer(name, email, phone, referredBy)
-    return buyer as unknown as Buyer
+
+    const newBuyer = buyer as unknown as Buyer;
+    setBuyers(prev => [newBuyer, ...prev])
+    return newBuyer
   }
 
   async function copy(text: string, message = 'Copied to clipboard') {
@@ -115,7 +158,7 @@ export function AppProvider({ children, serverBuyers, serverReferrers, serverAct
   }
 
   return (
-    <AppContext.Provider value={{ buyers: serverBuyers, referrers: serverReferrers, activities: serverActivities, notify: setToast, setVerified, createRef, register, copy, exportBuyers, exportReferrers, adminName, setAdminName }}>
+    <AppContext.Provider value={{ buyers, referrers, activities, notify: setToast, setVerified, createRef, register, copy, exportBuyers, exportReferrers, adminName, setAdminName }}>
       {children}
       {toast && <div className="toast" role="status"><span className="toast-check"><Check size={16} /></span>{toast}<button aria-label="Dismiss notification" onClick={() => setToast('')}><X size={16} /></button></div>}
     </AppContext.Provider>
