@@ -131,26 +131,25 @@ function ReferrerRegistrationContent() {
               <ArrowLeft size={14} /> Back
             </button>
             {registered ? (
-              <div style={{ textAlign: "center", padding: "40px 0" }}>
-                <div style={{ display: "inline-flex", padding: "16px", borderRadius: "50%", background: "var(--green-soft)", color: "var(--green)", marginBottom: "24px" }}>
+              <div className="referrer-success">
+                <div className="referrer-success-icon">
                   <BadgeCheck size={48} />
                 </div>
-                <h2 style={{ fontSize: "28px", fontWeight: "700", marginBottom: "12px", color: "var(--text-primary)" }}>You&apos;re all set, {registered.name.split(" ")[0]}!</h2>
-                <p style={{ color: "var(--muted)", fontSize: "16px", marginBottom: "32px", lineHeight: "1.6" }}>
+                <h2>You&apos;re all set, {registered.name.split(" ")[0]}!</h2>
+                <p className="referrer-success-desc">
                   You are now an official advocate for Reality Flex 3.0. Share your unique link below, and you&apos;ll earn rewards for every successful referral.
                 </p>
                 
-                <div style={{ textAlign: "left", marginBottom: "32px" }}>
-                  <span style={{ display: "block", fontSize: "12px", textTransform: "uppercase", fontWeight: "600", color: "var(--muted)", marginBottom: "8px" }}>Your Personal Link</span>
-                  <div className="copy-input" style={{ display: "flex", alignItems: "center", border: "1px solid var(--border)", borderRadius: "8px", overflow: "hidden", background: "white" }}>
-                    <input 
+                <div className="referrer-success-link">
+                  <span className="referrer-link-label">Your Personal Link</span>
+                  <div className="referrer-copy-input">
+                    <input suppressHydrationWarning 
                       readOnly 
-                      value={`${window.location.origin}/?ref=${registered.code}`} 
-                      style={{ flex: 1, padding: "12px 16px", border: "none", outline: "none", fontSize: "15px", background: "transparent", color: "var(--text-primary)" }}
+                      value={typeof window !== "undefined" ? `${window.location.origin}/?ref=${registered.code}` : `https://realityflex.vercel.app/?ref=${registered.code}`} 
                     />
                     <button 
                       onClick={handleCopy}
-                      style={{ display: "flex", alignItems: "center", gap: "6px", padding: "0 20px", height: "100%", background: copied ? "var(--green)" : "var(--brand-primary)", color: "white", border: "none", fontWeight: "600", cursor: "pointer", transition: "all 0.2s" }}
+                      className={copied ? "copied" : ""}
                     >
                       {copied ? <Check size={16} /> : <Copy size={16} />}
                       {copied ? "Copied" : "Copy"}
@@ -158,14 +157,10 @@ function ReferrerRegistrationContent() {
                   </div>
                 </div>
 
-                <div className="info-note" style={{ textAlign: "left", marginBottom: "32px" }}>
+                <div className="info-note referrer-info-note">
                   <ShieldCheck size={18} />
                   <span>Anyone who registers via this link will automatically be attributed to you.</span>
                 </div>
-
-                <Link href="/" className="button button-secondary full-width" style={{ justifyContent: "center" }}>
-                  Preview buyer registration page
-                </Link>
               </div>
             ) : (
               <>

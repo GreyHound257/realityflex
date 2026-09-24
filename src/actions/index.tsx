@@ -4,11 +4,10 @@ import { db } from "@/prisma/db";
 import { revalidatePath } from "next/cache";
 import { avatarColors } from "@/lib/data";
 import { render } from '@react-email/render';
-import { Resend } from 'resend';
 import WelcomeEmail from "@/components/emails/WelcomeEmail";
+import ReferrerEmail from "@/components/emails/ReferrerEmail";
 import bcrypt from "bcryptjs"
 
-const resend = new Resend(process.env.RESEND_API_KEY);
 
 export async function checkEmailExists(email: string) {
   const existing = await db.orm.public.Buyer.where({ email: email.trim().toLowerCase() }).first();
@@ -45,35 +44,17 @@ export async function createReferrer(name: string, email: string, phone: string)
   revalidatePath("/admin/dashboard");
 
   // Send welcome email asynchronously so it doesn't block
-  resend.emails.send({
-    from: "Reality Flex 3.0 <hello@derealityspec.com>",
-    to: referrer.email,
-    subject: "Welcome to the Reality Flex 3.0 Referral Program!",
-    html: `
-      <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; color: #1a1a1a;">
-        <h2 style="color: #0b1a30;">Welcome, ${referrer.name.split(' ')[0]}!</h2>
-        <p>You are now an official advocate for <strong>Reality Flex 3.0</strong>.</p>
-        <p>Help others start their land ownership journey and get rewarded for every successful subscription.</p>
-        
-        <div style="background: #f4f7fb; padding: 20px; border-radius: 8px; margin: 24px 0; text-align: center;">
-          <p style="margin: 0; font-size: 14px; color: #666; text-transform: uppercase;">Your Personal Referral Link</p>
-          <p style="margin: 8px 0 0 0; font-size: 18px; font-weight: bold; color: #0b1a30;">
-            https://realityflex.vercel.app/?ref=${referrer.code}
-          </p>
-        </div>
-
-        <p><strong>Your Rewards:</strong></p>
-        <ul>
-          <li><strong>1 Referral:</strong> ₦20,000 Cash Reward</li>
-          <li><strong>3 Referrals:</strong> ₦70,000 Cash Reward + ₦20,000 Shopping Experience</li>
-          <li><strong>5 Referrals:</strong> ₦125,000 Cash Reward + ₦40,000 Shopping Experience</li>
-        </ul>
-
-        <p>Thank you for partnering with us.</p>
-        <p>Best regards,<br/>De Reality Spec Ltd.</p>
-      </div>
-    `
-  }).catch(console.error);
+  const emailHtml = await render(<ReferrerEmail name={referrer.name} code={referrer.code} />);
+    
+    fetch("https://hook.eu1.make.com/i5gacsofvt3c83piv8u7uqokhtrfhli1", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        to: referrer.email,
+        subject: "Welcome to the Reality Flex 3.0 Referral Program!",
+        htmlContent: emailHtml,
+      })
+    }).catch(console.error);
 
   return referrer;
 }
@@ -157,3 +138,6 @@ export async function updateAdminSettings(adminId: string, formData: FormData) {
 
   revalidatePath("/admin/settings");
 }
+
+
+

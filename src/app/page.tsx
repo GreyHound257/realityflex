@@ -251,7 +251,7 @@ function RegistrationContent() {
               <Sparkles size={16} className="pill-icon" />
               <span>Valid till: 30th Oct., 2026</span>
             </div>
-            <h1>FLEX YOUR WAY TO<br />LAND OWNERSHIP</h1>
+            <h1>FLEX YOUR WAY TO<br /><span style={{ color: "var(--red)" }}>LAND OWNERSHIP</span></h1>
             <p className="story-description">
               Secure your future with Reality Flex 3.0. A flexible land ownership plan in Reality Garden City, designed to make your real estate investment journey smooth and accessible.
             </p>

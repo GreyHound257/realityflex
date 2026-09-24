@@ -7154,7 +7154,7 @@ button {
   gap: 6px;
   padding: 0 20px;
   height: 100%;
-  background: var(--brand-primary);
+  background: var(--purple);
   color: white;
   border: none;
   font-weight: 600;
