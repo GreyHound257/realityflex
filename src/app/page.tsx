@@ -83,6 +83,7 @@ function RegistrationContent() {
   const { buyers, register, copy, notify } = useApp();
   const searchParams = useSearchParams();
   const [step, setStep] = useState(1);
+  const [mobileView, setMobileView] = useState<"story" | "form">("story");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -243,7 +244,7 @@ function RegistrationContent() {
           </Link>
         </div>
       </header>
-      <main className="registration-main">
+      <main className="registration-main" data-mobile-view={mobileView}>
         <section className="registration-story story-text-layout">
           <div className="story-text-content">
             <div className="story-pill">
@@ -284,6 +285,17 @@ function RegistrationContent() {
                 </div>
               </div>
             </div>
+            
+            <button 
+              className="button button-primary mobile-only mobile-nav-btn" 
+              onClick={() => {
+                setMobileView("form");
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+            >
+              Get started
+              <ArrowRight size={15} />
+            </button>
           </div>
           <div className="story-text-footer">
             <span>08079058878</span>
@@ -294,6 +306,15 @@ function RegistrationContent() {
           className={`registration-form-section ${step === 3 ? "success-form-section" : ""}`}
         >
           <div className="registration-form-wrap">
+            <button 
+              className="mobile-back-btn mobile-only" 
+              onClick={() => {
+                setMobileView("story");
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+            >
+              <ArrowLeft size={14} /> Back
+            </button>
             <div
               className="registration-stepper"
               aria-label={`Registration step ${step} of 3`}
