@@ -16,7 +16,18 @@ export async function checkEmailExists(email: string) {
 
 export async function lookupReferralCode(code: string) {
   if (!code) return null;
-  const referrer = await db.orm.public.Referrer.where({ code: code.trim().toUpperCase() }).first();
+  const normalized = code.trim().toUpperCase();
+  
+  let referrer = await db.orm.public.Referrer.where({ code: normalized }).first();
+  
+  if (!referrer && !normalized.startsWith("RF3-")) {
+    referrer = await db.orm.public.Referrer.where({ code: `RF3-${normalized}` }).first();
+  }
+  
+  if (!referrer && normalized.startsWith("RF3-")) {
+    referrer = await db.orm.public.Referrer.where({ code: normalized.replace("RF3-", "") }).first();
+  }
+
   return referrer ? { name: referrer.name, code: referrer.code } : null;
 }
 
@@ -138,6 +149,7 @@ export async function updateAdminSettings(adminId: string, formData: FormData) {
 
   revalidatePath("/admin/settings");
 }
+
 
 
 

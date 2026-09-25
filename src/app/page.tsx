@@ -199,7 +199,7 @@ function RegistrationContent() {
       );
       return;
     }
-    finishRegistration(referralCode.trim());
+    finishRegistration(referrer.code);
   }
 
   async function finishRegistration(code: string | null) {
@@ -494,7 +494,7 @@ function RegistrationContent() {
                       className="referral-code-input"
                       aria-label="Referral Code"
                       placeholder="e.g. RF3-ORG1"
-                      maxLength={8}
+                      maxLength={30}
                       value={referralCode}
                       onChange={(event) => {
                         setReferralCode(
