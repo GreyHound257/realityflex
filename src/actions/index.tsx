@@ -7,6 +7,16 @@ import { render } from '@react-email/render';
 import WelcomeEmail from "@/components/emails/WelcomeEmail";
 import ReferrerEmail from "@/components/emails/ReferrerEmail";
 import bcrypt from "bcryptjs"
+import { cookies } from "next/headers";
+
+async function requireAdmin() {
+  const cookieStore = await cookies();
+  const sessionId = cookieStore.get("admin_session")?.value;
+  if (!sessionId) throw new Error("Unauthorized");
+  const session = await db.orm.public.Session.where({ id: sessionId }).include("admin").first();
+  if (!session || (session.expiresAt as any).epochMilliseconds < Date.now()) throw new Error("Unauthorized");
+  return session.admin;
+}
 
 
 export async function checkEmailExists(email: string) {
@@ -108,6 +118,7 @@ export async function registerBuyer(name: string, email: string, phone: string, 
 }
 
 export async function verifyBuyer(id: string, verified: boolean) {
+  await requireAdmin();
   const updated = await db.orm.public.Buyer.where({ id }).update({
     status: verified ? "verified" : "pending"
   });
@@ -125,6 +136,8 @@ export async function verifyBuyer(id: string, verified: boolean) {
 }
 
 export async function updateAdminSettings(adminId: string, formData: FormData) {
+  const currentAdmin = await requireAdmin();
+  if (currentAdmin.id !== adminId) throw new Error("Unauthorized");
   if (!adminId) return;
   
   const name = formData.get("name") as string;
@@ -149,6 +162,7 @@ export async function updateAdminSettings(adminId: string, formData: FormData) {
 
   revalidatePath("/admin/settings");
 }
+
 
 
 
