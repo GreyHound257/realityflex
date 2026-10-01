@@ -8,12 +8,12 @@ export default async function AdminLayout({ children }: { children: React.ReactN
   const sessionId = cookieStore.get('admin_session')?.value
   
   if (!sessionId) {
-    redirect('/admin/login')
+    return <>{children}</>
   }
   
   const session = await db.orm.public.Session.where({ id: sessionId }).include("admin").first()
   if (!session || (session.expiresAt as any).epochMilliseconds < Date.now()) {
-    redirect('/admin/login')
+    return <>{children}</>
   }
 
   const buyers = await db.orm.public.Buyer.orderBy((b) => b.date.desc()).all()
@@ -34,3 +34,4 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     </AppProvider>
   )
 }
+
